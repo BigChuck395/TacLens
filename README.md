@@ -4,6 +4,17 @@ An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detecti
 
 This distribution contains application code and generated testing data. It includes no saved user workspaces, personal mappings, reports, backups or Git history.
 
+## How to use TacLens
+
+1. **Create a workspace.** Use **Switch / manage workspaces** to keep separate assessments or teams in their own workspaces. You can also import the included testing workspace to explore the tool.
+2. **Add your layers.** Open **Layer library → Add a layer** and choose Detection coverage, Deficiencies or Threat intelligence. Use a detection layer for each tool, and separate assessment or intelligence layers by source. Give layers meaningful names and organize them with folders and tags.
+3. **Map techniques.** Open a layer's mapping editor, select individual techniques or bulk-select a group, then apply your evidence. Record the defense for deficiency and intelligence mappings, with a review date and optional notes.
+4. **Review coverage.** Use **Landscape** for totals, **ATT&CK matrix** to explore techniques, and **Analysis** to find outstanding work. **Coverage review** helps verify existing protection and review intelligence sources when due.
+5. **Track action.** Select **Start work** to assign a mapping and add progress notes. Use **Record defense** when protection changes, then close the tracked work once its coverage is confirmed.
+6. **Save and share.** Choose a storage folder in Settings or export a JSON backup. Use **Export HTML report** for a detailed analyst report or a concise ELT report.
+
+Select or deselect layers in the library to change the evidence included in comparisons and reports. JSON backups preserve editable workspace data; HTML reports are read-only snapshots.
+
 ## Run without Node.js
 
 **You do not need Node.js, npm, a terminal or a local server to run TacLens.** Extract the download and open `index.html` directly in your browser. You can also use it on a static host such as GitHub Pages.
