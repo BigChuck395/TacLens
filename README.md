@@ -100,5 +100,3 @@ These tests use isolated browser contexts and temporary test storage. Screenshot
 The bundled catalog is in `data.js`. MITRE's ATT&CK content retains its [license and attribution](LICENSE-ATTACK.txt). ATT&CK is a registered trademark of The MITRE Corporation. This package does not choose or change a license for the application source.
 
 To rebuild the catalog, place the official Enterprise STIX collection in `enterprise-attack.json`, review its version and license, then run `npm run build:data` and `npm test`. The source STIX download is ignored; the generated `data.js` is distributed.
-
-`DISTRIBUTION.json` records the files and checksums included in this prepared version. It is a snapshot of the release, not a live manifest for later edits.
