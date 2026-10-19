@@ -1,0 +1,56 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
+const {WorkspaceStore}=require('../workspace-store.cjs');const catalog={techniques:[{id:'T1000'}]};
+const workspace=name=>({id:crypto.randomUUID(),schema:'strata-workspace',version:1,name,folders:['Intel/Current'],tags:['intel'],collapsedFolders:[],layers:[{id:crypto.randomUUID(),name:'Intel',type:'intel',visible:true,folder:'Intel/Current',metadata:{reviewDays:30,reviewedOn:'2026-10-14'},entries:[{techniqueID:'T1000',status:'intelligence',date:'2026-10-14',compensatingControl:'architecture',notes:'Original evidence\nUnicode ✓'}]}]});
+async function setup(){await fs.mkdir(path.join(__dirname,'../test-results'),{recursive:true});const directory=await fs.mkdtemp(path.join(__dirname,'../test-results/workspace-store-'));return {directory,store:new WorkspaceStore(directory,catalog)};}
+test('legacy Not reviewed deficiencies persist as open with evidence intact while intelligence stays unreviewed',async()=>{
+ const {directory,store}=await setup(),w=workspace('Deficiency migration'),intel=w.layers[0];intel.entries[0].compensatingControl='unknown';
+ const deficiency={...structuredClone(intel),id:crypto.randomUUID(),name:'Exercise',type:'hunt',entries:[{techniqueID:'T1000',status:'finding',compensatingControl:'unknown',notes:'Original testing evidence',date:'2026-09-14',openedOn:'2026-09-01'}]};w.layers.push(deficiency);await store.write({version:1,activeId:w.id,workspaces:[w]},0);
+ const loaded=(await new WorkspaceStore(directory,catalog).load()).library.workspaces[0];assert.equal(loaded.layers[1].id,deficiency.id);assert.equal(loaded.layers[1].entries[0].compensatingControl,'none');assert.equal(loaded.layers[1].entries[0].status,'finding');assert.equal(loaded.layers[1].entries[0].notes,'Original testing evidence');assert.equal(loaded.layers[1].entries[0].date,'2026-09-14');assert.equal(loaded.layers[1].entries[0].openedOn,'2026-09-01');assert.equal(loaded.layers[0].entries[0].compensatingControl,'unknown');
+});
+test('users, exact-source work, and closed history persist across disk restarts',async()=>{
+ const S=require('../core.js'),{directory,store}=await setup();let w=workspace('Tracked work');w.layers[0].type='hunt';w.layers[0].visible=false;w.layers[0].entries[0]={techniqueID:'T1000',status:'finding',compensatingControl:'none',notes:'Original evidence',date:'2026-08-01'};
+ const intel={...structuredClone(w.layers[0]),id:crypto.randomUUID(),name:'Intel',type:'intel',visible:true,metadata:{},entries:[{techniqueID:'T1000',status:'intelligence',compensatingControl:'unknown',date:'2026-10-14',notes:'Intel evidence'}]};w.layers.push(intel,{id:crypto.randomUUID(),name:'SIEM',type:'detection',visible:true,entries:[{techniqueID:'T1000',status:'present',date:'2026-10-14'}]});
+ w=S.createUser(S.createUser(w,'Alex'),'Unused user');w=S.updateWork(w,'T1000',w.layers[0].id,{action:'start',assignee:'Alex',note:'Engineering is testing.'},'2026-10-16',catalog);w=S.updateWork(w,'T1000',intel.id,{action:'start',assignee:'Alex'},'2026-10-16',catalog);w.layers=S.reviewIntelDetection(w.layers,'T1000',intel.id,'covered','2026-10-16',catalog);w=S.updateWork(w,'T1000',intel.id,{action:'close',note:'Detection verified.'},'2026-10-16',catalog);w=S.deleteUser(w,'Alex');w=S.createUser(w,'Blair');w=S.updateWork(w,'T1000',w.layers[0].id,{action:'assign',assignee:'Blair'},'2026-10-16',catalog);
+ await store.write({version:1,activeId:w.id,workspaces:[w]},0);const loaded=await new WorkspaceStore(directory,catalog).load(),reopened=loaded.library.workspaces[0];assert.deepEqual(reopened.users,['Blair','Unused user']);assert.equal(reopened.layers[0].visible,false);assert.equal(reopened.layers[0].entries[0].work.assignee,'Blair');assert.equal(reopened.layers[0].entries[0].status,'finding');assert.equal(reopened.layers[0].entries[0].notes,'Original evidence');assert.equal(reopened.layers[1].entries[0].work.status,'closed');assert.equal(reopened.layers[1].entries[0].work.assignee,'Alex (User Deleted)');assert.equal(reopened.layers[1].entries[0].work.closedOn,'2026-10-16');assert.ok(reopened.layers[1].entries[0].work.notes.some(n=>n.text==='Detection verified.'));assert.equal(S.workItems(reopened,catalog,'2026-10-16').length,2);
+ loaded.library.workspaces[0]=S.updateWork(reopened,'T1000',reopened.layers[0].id,{action:'add_note',note:'Retest tomorrow.'},'2026-10-17',catalog);await store.write(loaded.library,loaded.revision);assert.equal((await new WorkspaceStore(directory,catalog).load()).library.workspaces[0].layers[0].entries[0].work.notes.at(-1).text,'Retest tomorrow.');
+});
+test('legacy waiting notes migrate into persistent in-progress work with original opening dates',async()=>{
+ const S=require('../core.js'),{directory,store}=await setup(),w=workspace('Waiting on engineering');w.layers[0].type='hunt';w.layers[0].entries[0]={techniqueID:'T1000',status:'finding',compensatingControl:'none',notes:'Deficiency evidence',date:'2026-08-01'};
+ await store.write({version:1,activeId:w.id,workspaces:[w]},0);const loaded=await store.load(),current=loaded.library.workspaces[0];current.layers=S.snoozeDeficiency(current.layers,'T1000',current.layers[0].id,{until:'2026-10-30',note:'Waiting on engineering validation'},'2026-10-16',catalog);await store.write(loaded.library,loaded.revision);
+ const reopened=(await new WorkspaceStore(directory,catalog).load()).library.workspaces[0],entry=reopened.layers[0].entries[0];assert.equal(entry.status,'finding');assert.equal(entry.openedOn,'2026-08-01');assert.equal(entry.deficiencySnooze.note,'Waiting on engineering validation');assert.equal(S.analysisFacts(S.summary(reopened.layers,'T1000'),'2026-10-16').deferred,true);assert.equal(entry.work.status,'in_progress');assert.match(entry.work.notes[0].text,/Waiting on engineering validation/);assert.equal(S.analysisFacts(S.summary(reopened.layers,'T1000'),'2026-10-30').deferred,true);
+});
+test('intel detection decisions retain their exact source and coverage after a disk restart',async()=>{
+ const S=require('../core.js'),{directory,store}=await setup(),w=workspace('Intel detection review');w.layers[0].entries[0].compensatingControl='unknown';w.layers.push({id:crypto.randomUUID(),name:'SIEM',type:'detection',visible:true,entries:[{techniqueID:'T1000',status:'present',date:'2026-10-14'}]});
+ await store.write({version:1,activeId:w.id,workspaces:[w]},0);const loaded=await store.load(),current=loaded.library.workspaces[0];current.layers=S.reviewIntelDetection(current.layers,'T1000',current.layers[0].id,'uncovered','2026-10-16',catalog);await store.write(loaded.library,loaded.revision);
+ const reopened=(await new WorkspaceStore(directory,catalog).load()).library.workspaces[0],s=S.summary(reopened.layers,'T1000');assert.equal(s.exposed,true);assert.equal(s.intelPending,false);assert.equal(s.detected,true);assert.equal(s.detectionCount,1);assert.equal(s.intelAssessments[0].reviewedOn,'2026-10-16');
+});
+test('recommendation acceptance persists through disk normalization and a new store instance',async()=>{
+ const S=require('../core.js'),{directory,store}=await setup(),w=workspace('Accepted coverage'),library={version:1,activeId:w.id,workspaces:[w]};await store.write(library,0);const loaded=await store.load();
+ loaded.library.workspaces[0]=S.reviewRecommendation(loaded.library.workspaces[0],'T1000','accept',{date:'2026-10-16'},catalog);await store.write(loaded.library,loaded.revision);
+ const reloaded=await new WorkspaceStore(directory,catalog).load();assert.equal(S.recommendationItems(reloaded.library.workspaces[0],catalog)[0].accepted,true);
+});
+test('workspace folders hold evidence and schedules across store restarts, with previous-save backups',async()=>{
+ const {directory,store}=await setup(),w=workspace('First'),library={version:1,activeId:w.id,workspaces:[w]};assert.equal((await store.read()).library,null);
+ await store.write(library,0);const file=path.join(directory,w.id,'workspace.json');assert.equal(JSON.parse(await fs.readFile(file)).layers[0].metadata.reviewDays,30);
+ w.name='Renamed';await store.write(library,1);assert.equal(JSON.parse(await fs.readFile(path.join(directory,w.id,'workspace.backup.json'))).name,'First');
+ const reopened=await new WorkspaceStore(directory,catalog).read();assert.equal(reopened.revision,2);assert.equal(reopened.library.workspaces[0].name,'Renamed');assert.equal(reopened.library.workspaces[0].layers[0].entries[0].notes,'Original evidence\nUnicode ✓');
+});
+test('stale or concurrent writes cannot overwrite newer data',async()=>{
+ const {store}=await setup(),w=workspace('Original'),library={version:1,activeId:w.id,workspaces:[w]};await store.write(library,0);
+ const a=structuredClone(library),b=structuredClone(library);a.workspaces[0].name='A';b.workspaces[0].name='B';
+ const results=await Promise.allSettled([store.write(a,1),store.write(b,1)]);assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(results.find(r=>r.status==='rejected').reason.status,409);assert.equal((await store.read()).library.workspaces[0].name,'A');
+});
+test('invalid batches and traversal IDs are rejected before any existing file changes',async()=>{
+ const {store,directory}=await setup(),w=workspace('Safe'),library={version:1,activeId:w.id,workspaces:[w]};await store.write(library,0);const original=await fs.readFile(path.join(directory,w.id,'workspace.json'),'utf8');
+ const bad=structuredClone(library);bad.workspaces[0].name='Should not be saved';bad.workspaces.push({...workspace('Bad'),id:'../outside'});await assert.rejects(store.write(bad,1));assert.equal(await fs.readFile(path.join(directory,w.id,'workspace.json'),'utf8'),original);
+ const duplicate=structuredClone(library);duplicate.workspaces.push({...w,id:w.id.toUpperCase()});await assert.rejects(store.write(duplicate,1));
+ assert.throws(()=>store.child('..','outside'));assert.equal((await store.read()).revision,1);
+});
+test('deleted workspace folders are archived and corrupt indexes are not silently reset',async()=>{
+ const {store,directory}=await setup(),a=workspace('A'),b=workspace('B');await store.write({version:1,activeId:a.id,workspaces:[a,b]},0);await store.write({version:1,activeId:b.id,workspaces:[b]},1);
+ assert.deepEqual((await store.read()).library.workspaces.map(w=>w.id),[b.id]);const archived=(await fs.readdir(path.join(directory,'.trash'))).find(name=>name.startsWith(a.id));assert.ok(archived);assert.equal(JSON.parse(await fs.readFile(path.join(directory,'.trash',archived,'workspace.json'))).name,'A');
+ await fs.writeFile(path.join(directory,'index.json'),'invalid');await assert.rejects(store.read());assert.equal(JSON.parse(await fs.readFile(path.join(directory,b.id,'workspace.json'))).name,'B');
+});
+test('a missing index never causes existing workspace folders to be treated as an empty installation',async()=>{
+ const {store,directory}=await setup(),w=workspace('Keep me');await store.write({version:1,activeId:w.id,workspaces:[w]},0);await fs.unlink(path.join(directory,'index.json'));await assert.rejects(store.read(),/index is missing/);assert.equal(JSON.parse(await fs.readFile(path.join(directory,w.id,'workspace.json'))).name,'Keep me');
+});

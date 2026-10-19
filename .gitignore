@@ -1,0 +1,28 @@
+# Local data, backups and generated artifacts
+node_modules/
+/workspaces/
+/backups/
+/reports/
+/releases/
+/test-results/
+/_site/
+.env
+.env.*
+*.log
+*.zip
+*.sha256
+
+# Reports and workspace exports should not be committed accidentally.
+*.html
+!index.html
+*.json
+!package.json
+!package-lock.json
+!examples/operations-showcase-workspace.json
+!DISTRIBUTION.json
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

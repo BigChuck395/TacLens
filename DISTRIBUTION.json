@@ -1,0 +1,354 @@
+{
+  "product": "TacLens",
+  "version": "1.0.0",
+  "preparedOn": "2026-10-19",
+  "preparedAt": "2026-10-19T15:27:26.415Z",
+  "contents": "Application source plus independently generated testing data; no installed user data or Git history.",
+  "testingWorkspace": {
+    "file": "examples/operations-showcase-workspace.json",
+    "generatedBy": "scripts/build-showcase.cjs",
+    "generatedOn": "2026-10-19",
+    "layers": 32,
+    "mappings": 1098
+  },
+  "checks": {
+    "unitTestsPassed": 126,
+    "browserSuitesPassed": [
+      "distribution-browser.cjs",
+      "matrix-layout-browser.cjs",
+      "elt-report-browser.cjs",
+      "browser-only-browser.cjs"
+    ],
+    "privacyScanPassed": true,
+    "directFileModeWithoutServerPassed": true,
+    "runtimeMatchesBackedUpSourceIgnoringWhitespace": true
+  },
+  "excluded": [
+    "workspaces",
+    "backups",
+    "reports",
+    "test-results",
+    "_site",
+    ".git",
+    "application-annotated",
+    "local testing logs",
+    "machine-specific documentation",
+    "legacy one-time sample installers"
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 122,
+      "sha256": "87f07e02150dbb1a9ec58150acaab04dabef6620793ccf3d59f9fa30cafcce59"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "bytes": 1022,
+      "sha256": "48517fc69996502994e11eab011936f18248543f02c0e71b7a270d0c147e2726"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "bytes": 430,
+      "sha256": "2a4476a79e40dec5fd385b6bb02dbf2865779657e209960144f66c79cb8d8a4a"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 427,
+      "sha256": "9878c070e163c3a8e5d81b5ad4e100ea82322c8daccfbcc25888fa75fbac044c"
+    },
+    {
+      "path": "BROWSER-ONLY.md",
+      "bytes": 4167,
+      "sha256": "58d76bb339d377fcd5d6816043d4476f97303a0f2b4d2290405418febca6eec3"
+    },
+    {
+      "path": "LICENSE-ATTACK.txt",
+      "bytes": 1352,
+      "sha256": "64550c5c8caf027db21e32498059263998f64d74283da47f5bfa7bac0937bca2"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9116,
+      "sha256": "189e2f6edb52e2531dce56529123d207aeb1917acdd2de695b79acf74accdfe9"
+    },
+    {
+      "path": "app.js",
+      "bytes": 204853,
+      "sha256": "7025358f014425413f43a4d0ecf94d28bf90156112fe8820468f4287343d5e97"
+    },
+    {
+      "path": "core.js",
+      "bytes": 47710,
+      "sha256": "396c0791cc6945712077eb1075d56d68dd92ceeae15e3be36e13461d604d86b3"
+    },
+    {
+      "path": "data.js",
+      "bytes": 1134605,
+      "sha256": "364b8396356f3ed5ee7d494e85e90579a824819cb9598e85e5f29e2b69e77be6"
+    },
+    {
+      "path": "elt-report.js",
+      "bytes": 32577,
+      "sha256": "5da72c6ad5459fc0be24428c624249a148d5ac34d294ffb5843d8d03cfe92e28"
+    },
+    {
+      "path": "examples/README.md",
+      "bytes": 2094,
+      "sha256": "aecbfd098352a90711a234986735d7269ca80fc17421d55b46aafbdaa0765552"
+    },
+    {
+      "path": "examples/operations-showcase-workspace.json",
+      "bytes": 425253,
+      "sha256": "ffcee8c52f51a340ec7baf0c4651cceee4e84aeaf35f56e5c1d104d079ac9fa6"
+    },
+    {
+      "path": "favicon.ico",
+      "bytes": 32038,
+      "sha256": "9b9e2b9b48ac8484b864f1ded024219376d14184d789fc21d3d9c8b366976c93"
+    },
+    {
+      "path": "index.html",
+      "bytes": 1070,
+      "sha256": "f0ed6728fc0a4a59237a8545399fadeedc70e018e2694e374c86e9781ad33ebf"
+    },
+    {
+      "path": "insights.js",
+      "bytes": 37691,
+      "sha256": "75c4eff0c036d47377024fd0679d37d6b08865009ce444768dafcf5c88a96314"
+    },
+    {
+      "path": "matrix.js",
+      "bytes": 19808,
+      "sha256": "8c940cf34afc6055aa894a99c52b5238333b36270e14b5597d8bc12562e5cc7c"
+    },
+    {
+      "path": "package.json",
+      "bytes": 512,
+      "sha256": "63e61ae139dabc23f0497f80e01c565dbd4a64be0f7088d65fd437688254e766"
+    },
+    {
+      "path": "scripts/build-data.cjs",
+      "bytes": 1623,
+      "sha256": "5da1a0fbd3b4bb3b320b496f952824e8e7b9b9302b96a03ba008d72c5d175f9a"
+    },
+    {
+      "path": "scripts/build-icon.cjs",
+      "bytes": 1706,
+      "sha256": "8bed0471af3b90a96f5778559cf89839d92adcd1af97846859d8fb0e087fd616"
+    },
+    {
+      "path": "scripts/build-showcase.cjs",
+      "bytes": 17892,
+      "sha256": "fb9ea14f24845791498e13c9b92a815ab9b3a50ad2f7ca0b15ff9863e2fd77cd"
+    },
+    {
+      "path": "scripts/build-site.cjs",
+      "bytes": 2309,
+      "sha256": "f124032a21e2e8095314334130bd416e82de7ff668a5ac317781a8dbb62f9603"
+    },
+    {
+      "path": "scripts/start-example.cjs",
+      "bytes": 1293,
+      "sha256": "fcfdbf259a8c404cca41097ffee8c786fef928a8bc18b132d04435b87f9b50cb"
+    },
+    {
+      "path": "server.cjs",
+      "bytes": 3953,
+      "sha256": "3c29917c86d09bac66c33f2870a7080ec5f36692ccf264b32bb3dd9922047123"
+    },
+    {
+      "path": "storage.js",
+      "bytes": 4909,
+      "sha256": "6bb9aee99708f14aad834262a35237ba79a121cb92b91f683d757dd30d6c762e"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 73537,
+      "sha256": "e89772d5c008d2a5beae39a910625f22e5a577629d7c41bea55171b1f917de03"
+    },
+    {
+      "path": "tests/analysis-layers.test.cjs",
+      "bytes": 2318,
+      "sha256": "2054396c64ce19d9a637785b4daa8bc2f1f4d57db5638e2b24d1f0ae4b3ab95f"
+    },
+    {
+      "path": "tests/analysis-priorities.test.cjs",
+      "bytes": 6215,
+      "sha256": "3159d8c845c5dac3517494e38816b4b443f516783cb2747b069ecedb72696390"
+    },
+    {
+      "path": "tests/assessment-clarity.test.cjs",
+      "bytes": 1511,
+      "sha256": "eeda50ce5cb102373d0cd8515f7c2c60fe8049868c8cf479d63ac9b888e8daa0"
+    },
+    {
+      "path": "tests/browser-only-browser.cjs",
+      "bytes": 3169,
+      "sha256": "add606f2c7bae09b40cca0e1398da2add8e96bfc6932890d648e1f14f16fa010"
+    },
+    {
+      "path": "tests/core.test.cjs",
+      "bytes": 16611,
+      "sha256": "811b2e18e26c7dcb43afcd5ee52249127eccd9e6652061c8156fb377598dde14"
+    },
+    {
+      "path": "tests/defense-options.test.cjs",
+      "bytes": 3485,
+      "sha256": "3b306e32990cebece9a14f37cb3dda5f46ab86c212f0baed4e414511855f70ae"
+    },
+    {
+      "path": "tests/detection-depth.test.cjs",
+      "bytes": 4518,
+      "sha256": "cb24eee63c4ccc4b7daebbf095169fe81ddb1d34f290ed5d64f94cfaffa772fb"
+    },
+    {
+      "path": "tests/disk-workspaces-browser.cjs",
+      "bytes": 7392,
+      "sha256": "fed8490b21fd585cd89823fb28bb8d15358aea0a1593f01ec51302a372d0c365"
+    },
+    {
+      "path": "tests/distribution-browser.cjs",
+      "bytes": 5685,
+      "sha256": "2e62fe16d8cce69f241ddce08f00db519f4fab43ea78b388c4a7c07aecc067cb"
+    },
+    {
+      "path": "tests/elt-report-browser.cjs",
+      "bytes": 15183,
+      "sha256": "24e597782cfd7e0f835c64912d93cf051f34f82c78597fab896e8122e8ac8171"
+    },
+    {
+      "path": "tests/elt-report.test.cjs",
+      "bytes": 6979,
+      "sha256": "4f1599b4f3bf2edcb7b422d65b762acee3b54e3133c0a60d1ab73ef273605633"
+    },
+    {
+      "path": "tests/evidence-statistics.test.cjs",
+      "bytes": 1364,
+      "sha256": "874c48280b661baf461b44cc1506add054e36e3a8c6af64a7bbfa6738ab4a9ba"
+    },
+    {
+      "path": "tests/intel-detection-review.test.cjs",
+      "bytes": 5459,
+      "sha256": "6cc7744a773717301ff50d46a46d35e931e6f7ad3485adf8c03585eb24f6a781"
+    },
+    {
+      "path": "tests/intel-review.test.cjs",
+      "bytes": 2808,
+      "sha256": "87055f7295e0272b787230b182e576c4f1125c2c403b67daa9115b8afd786e54"
+    },
+    {
+      "path": "tests/landscape.test.cjs",
+      "bytes": 1448,
+      "sha256": "40df05bbd95676c49aa0b516a6cd3d050bb8215ab1b6128bec7cf7ae5aadef7c"
+    },
+    {
+      "path": "tests/matrix-layout-browser.cjs",
+      "bytes": 13405,
+      "sha256": "cfb24aaa48f429ddcc43220ead1bd34cc30e4404ceb6ad2f221249f896bfa493"
+    },
+    {
+      "path": "tests/matrix.test.cjs",
+      "bytes": 2903,
+      "sha256": "7c523b5a2e519771f13e4f4539e836c3dcdc62157a0dd76822b65a0c240e56c8"
+    },
+    {
+      "path": "tests/navigator.test.cjs",
+      "bytes": 3603,
+      "sha256": "7ca1ef91c25b91aa094825ce0e6315147d451f9bd7d6639267e0cd3bd88eb91d"
+    },
+    {
+      "path": "tests/queue.test.cjs",
+      "bytes": 3148,
+      "sha256": "743fff0390e0038f7f458887524e161c610920f06f8ec9957ac5fc5dab9014ed"
+    },
+    {
+      "path": "tests/recommendations.test.cjs",
+      "bytes": 3673,
+      "sha256": "6658476a6a42b8ca543752df1be50f5a31ef9dd6cd830b209929b0b775b02609"
+    },
+    {
+      "path": "tests/report-work-layers-browser.cjs",
+      "bytes": 10998,
+      "sha256": "1634448f4bbbb19e602d5fc3f2c8d8fa9773e3cab7b1a1dae54d27671d737d43"
+    },
+    {
+      "path": "tests/resolution-consistency.test.cjs",
+      "bytes": 4636,
+      "sha256": "4fe87ab9a86198f417b34be15f0e806334ae8b43a76617b3c693e9ef0763ad39"
+    },
+    {
+      "path": "tests/settings.test.cjs",
+      "bytes": 1283,
+      "sha256": "6a6762a12494317c4af692fd6587a928bcb595fa3812e6a5dc82b4bb13874a1b"
+    },
+    {
+      "path": "tests/showcase.test.cjs",
+      "bytes": 6296,
+      "sha256": "ce76a98cf11467e4c5844ece45acac3ab7119c34fc4c1deb6da3bc9ce6452c79"
+    },
+    {
+      "path": "tests/static-build.test.cjs",
+      "bytes": 2197,
+      "sha256": "2087dd1db21bd61483b0b9b9b4b223f47286d8d16733a9092c1207d7c2812d58"
+    },
+    {
+      "path": "tests/work-report.test.cjs",
+      "bytes": 2992,
+      "sha256": "67b257efc378764fd87a0fb35900f5ea361a8f6ba0b2197d431ecda988b0ed30"
+    },
+    {
+      "path": "tests/work-tracking.test.cjs",
+      "bytes": 7505,
+      "sha256": "74acac228e02450ceca87256974086b2cf69ac7344f3aca0d70b57b91762e949"
+    },
+    {
+      "path": "tests/workspace-folders-browser.cjs",
+      "bytes": 13254,
+      "sha256": "5e884c275e8c40170f27e7f5c578f21a3de641a7fcf4b2a7053a28f1d8f2c2d5"
+    },
+    {
+      "path": "tests/workspace-folders.test.cjs",
+      "bytes": 10554,
+      "sha256": "6dd4b6fd9bbd7366081dfb76ebfd78df56bfb3f62d4860642c086f547aa629a5"
+    },
+    {
+      "path": "tests/workspace-store.test.cjs",
+      "bytes": 11236,
+      "sha256": "15b14c3a8cce39fe5b596289642457ac05f826845e2970cb049ecb68fbb26a65"
+    },
+    {
+      "path": "work-report.js",
+      "bytes": 9522,
+      "sha256": "696c40bf90fbc656b7c1bd138ddd47f27ccd0baf4cddaf18f76441631ed534e2"
+    },
+    {
+      "path": "work-ui.js",
+      "bytes": 11350,
+      "sha256": "4347e8f677dc274cab63aa8ff65c840c1e2435bdde446bdfa6225cc62a54d73e"
+    },
+    {
+      "path": "workspace-store.cjs",
+      "bytes": 15693,
+      "sha256": "1a9f32d24082a2936ff364dfad0b98ff55229e85b4f4f8b885a0d1800edcd8f6"
+    }
+  ],
+  "browserOnly": {
+    "nodeRequired": false,
+    "launch": "Open index.html directly in a desktop browser.",
+    "guide": "BROWSER-ONLY.md",
+    "requiredFiles": [
+      "index.html",
+      "styles.css",
+      "data.js",
+      "core.js",
+      "work-ui.js",
+      "work-report.js",
+      "insights.js",
+      "matrix.js",
+      "elt-report.js",
+      "storage.js",
+      "app.js"
+    ]
+  },
+  "repositoryPreparation": "Text files normalized to LF, with trailing whitespace removed; runtime behavior is unchanged."
+}
