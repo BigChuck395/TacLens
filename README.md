@@ -4,6 +4,8 @@ An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detecti
 
 This distribution contains application code and generated testing data. It includes no saved user workspaces, personal mappings, reports, backups or Git history.
 
+**Development note:** TacLens was developed with AI assistance for coding, testing and documentation, guided by human direction and iterative feedback.
+
 ## How to use TacLens
 
 1. **Create a workspace.** Use **Switch / manage workspaces** to keep separate assessments or teams in their own workspaces. You can also import the included testing workspace to explore the tool.
