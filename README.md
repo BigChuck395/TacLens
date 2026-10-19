@@ -11,7 +11,7 @@ This distribution contains application code and generated testing data. It inclu
 3. **Map techniques.** Open a layer's mapping editor, select individual techniques or bulk-select a group, then apply your evidence. Record the defense for deficiency and intelligence mappings, with a review date and optional notes.
 4. **Review coverage.** Use **Landscape** for totals, **ATT&CK matrix** to explore techniques, and **Analysis** to find outstanding work. **Coverage review** helps verify existing protection and review intelligence sources when due.
 5. **Track action.** Select **Start work** to assign a mapping and add progress notes. Use **Record defense** when protection changes, then close the tracked work once its coverage is confirmed.
-6. **Save and share.** Choose a storage folder in Settings or export a JSON backup. Use **Export HTML report** for a detailed analyst report or a concise ELT report.
+6. **Save and share.** In Chrome or Edge, [choose a workspace folder](#save-workspaces-to-folders) for automatic disk saves. You can also export a JSON backup. Use **Export HTML report** for a detailed analyst report or a concise ELT report.
 
 Select or deselect layers in the library to change the evidence included in comparisons and reports. JSON backups preserve editable workspace data; HTML reports are read-only snapshots.
 
@@ -21,22 +21,45 @@ Select or deselect layers in the library to change the evidence included in comp
 
 1. Download and fully extract the ZIP. Do not open `index.html` from inside the ZIP viewer.
 2. Keep the HTML, CSS and JavaScript files together in the same folder.
-3. Double-click `index.html`, or use your browser's **Open file** command. Direct-file operation is tested with Microsoft Edge.
+3. Double-click `index.html`, or use your browser's **Open file** command. Direct-file operation is tested with desktop Chrome and Edge.
 4. Create layers or import the included testing workspace through **Settings → Workspaces & backups → Import layers / backups**.
 5. Use the same browser for saved work. Use **Export current workspace** or **Export all workspaces** in Settings for portable JSON backups.
 
-The browser app includes the matrix, layer editing, Analysis, coverage review, work tracking, JSON import/export and HTML report generation. Desktop Chrome and Edge can also save workspaces directly to a folder you approve, without Node.js or either `.cjs` file. Firefox uses browser storage and JSON import/export; automatic folder saves in Firefox require the optional local server.
+The browser app includes the matrix, layer editing, Analysis, coverage review, work tracking, JSON import/export and HTML report generation. See [BROWSER-ONLY.md](BROWSER-ONLY.md) for the exact file list and minimal folder layout.
 
-To save directly to disk in Chrome or Edge:
+## Save workspaces to folders
+
+**Desktop Chrome and Edge can save directly to local folders from `index.html`. Node.js, `server.cjs` and `workspace-store.cjs` are not needed for this mode.** Approve a folder once, then changes save automatically while access remains available.
+
+| Browser | Open `index.html` directly | Automatic saves to a selected folder |
+| --- | --- | --- |
+| Desktop Chrome / Edge | Yes | Yes, after granting folder access. |
+| Firefox | Yes, with browser storage and JSON import/export. | Requires the [optional local server](#optional-local-server-for-folder-storage). |
+
+### Choose a storage folder
 
 1. Open **Settings → Storage → Save workspace to folder**, or **Manage workspaces → Save to folder**.
 2. Choose a parent folder in the browser's folder picker and approve read/write access.
-3. Review the destination and select **Save here**. TacLens creates a subfolder named with the workspace's ID. Future edits save to `workspace.json`; after changes, `workspace.backup.json` holds the previous version.
-4. To reopen saved files, select **Open saved workspace folder** and choose the subfolder containing `workspace.json`.
+3. Review the destination and select **Save here**. Each workspace gets its own subfolder named with its ID. Repeat for other workspaces as needed.
+4. Check that the workspace status says **Saved to selected folder**.
 
-The browser remembers folder connections and keeps a recovery copy. If folder permission expires, use **Reconnect folder**. Folder files remain independent of browser storage; clearing browser data removes remembered connections, which you can restore by opening the saved folder. Workspaces without a chosen folder remain in browser storage. A network folder can be used if it is available in the browser's picker. Use one active editor per shared workspace; changed-file checks catch stale saves but do not provide a multi-user database.
+```text
+Chosen parent folder/
+  <workspace-id>/
+    workspace.json          Current layers, mappings, notes and work tracking
+    workspace.backup.json   Previous saved version, created after edits
+```
 
-See [BROWSER-ONLY.md](BROWSER-ONLY.md) for the exact file list, a minimal folder layout and the difference between opening the app and opening an exported report.
+Workspaces without a selected folder stay in browser storage. A mapped drive or network folder can be used if the browser's picker can access it. The folder must remain available for automatic saves.
+
+### Reopen, reconnect or change folders
+
+- **Open saved workspace folder:** choose the workspace subfolder containing `workspace.json`, review the preview and select **Open workspace**. Existing folders saved by the local server are compatible. Opening a saved copy replaces the browser recovery copy of that same workspace.
+- **Reconnect folder:** restore browser permission if access expires. The browser remembers folder connections and keeps a recovery copy, including edits waiting to be saved.
+- **Choose another folder:** save a copy to a different parent folder. Future edits use the new folder; the original copy is kept and is not synchronized.
+- **Remove a linked workspace:** removes it from the app's list while keeping its saved files. Clearing browser data also leaves those files intact; reopen their folder to restore the connection.
+
+Use one active editor per shared workspace. Changed-file checks reject detected stale saves; open the saved version or save your edits to a different folder to resolve them. Folder storage does not replace portable JSON backups or provide a multi-user database.
 
 ## Optional local server for folder storage
 
