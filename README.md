@@ -14,13 +14,22 @@ This distribution contains application code and generated testing data. It inclu
 4. Create layers or import the included testing workspace through **Settings → Workspaces & backups → Import layers / backups**.
 5. Use the same browser for saved work. Use **Export current workspace** or **Export all workspaces** in Settings for portable JSON backups.
 
-In this mode, mappings and workspaces are saved in browser storage. Browser-only mode includes the matrix, layer editing, Analysis, coverage review, work tracking, JSON import/export and HTML report generation. Automatic saving to application folders, selecting a network-drive folder and sharing a workspace through that folder require the optional local server.
+The browser app includes the matrix, layer editing, Analysis, coverage review, work tracking, JSON import/export and HTML report generation. Desktop Chrome and Edge can also save workspaces directly to a folder you approve, without Node.js or either `.cjs` file. Firefox uses browser storage and JSON import/export; automatic folder saves in Firefox require the optional local server.
+
+To save directly to disk in Chrome or Edge:
+
+1. Open **Settings → Storage → Save workspace to folder**, or **Manage workspaces → Save to folder**.
+2. Choose a parent folder in the browser's folder picker and approve read/write access.
+3. Review the destination and select **Save here**. TacLens creates a subfolder named with the workspace's ID. Future edits save to `workspace.json`; after changes, `workspace.backup.json` holds the previous version.
+4. To reopen saved files, select **Open saved workspace folder** and choose the subfolder containing `workspace.json`.
+
+The browser remembers folder connections and keeps a recovery copy. If folder permission expires, use **Reconnect folder**. Folder files remain independent of browser storage; clearing browser data removes remembered connections, which you can restore by opening the saved folder. Workspaces without a chosen folder remain in browser storage. A network folder can be used if it is available in the browser's picker. Use one active editor per shared workspace; changed-file checks catch stale saves but do not provide a multi-user database.
 
 See [BROWSER-ONLY.md](BROWSER-ONLY.md) for the exact file list, a minimal folder layout and the difference between opening the app and opening an exported report.
 
 ## Optional local server for folder storage
 
-Node.js is only needed for the optional folder-storage service. To use automatic workspace files on disk, install Node.js 24 or later and run:
+The optional server provides folder storage across browsers, including Firefox. It is not required for direct folder saves in desktop Chrome and Edge. To use the server, install Node.js 24 or later and run:
 
 ```sh
 node server.cjs
