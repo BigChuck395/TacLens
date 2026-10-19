@@ -2,6 +2,8 @@
 
 An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detection tools, deficiencies and intelligence using categorical coverage assessments, then export detailed analyst reports or a concise executive matrix.
 
+**Live app:** [Launch TacLens](https://bigchuck395.github.io/TacLens/) — no installation required. Workspaces stay in your browser or folders you approve.
+
 This distribution contains application code and generated testing data. It includes no saved user workspaces, personal mappings, reports, backups or Git history.
 
 **Development note:** TacLens was developed with AI assistance for coding, testing and documentation, guided by human direction and iterative feedback.
