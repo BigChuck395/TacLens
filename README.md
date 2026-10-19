@@ -72,27 +72,6 @@ The app and analyst report matrices grow down the page, preserve full technique 
 
 JSON workspace exports preserve editable data, including hidden layers. Keep reports and workspace exports outside the repository or in the ignored `reports/` and `backups/` folders.
 
-## Upload to GitHub
-
-Create your repository and upload the contents of this clean distribution folder. Include the hidden `.github`, `.gitignore` and `.gitattributes` entries if your upload method hides them. Keep the private backup archive separate.
-
-The included CI workflow runs unit tests and verifies the static build on pushes and pull requests. It does not publish a website.
-
-### Optional GitHub Pages
-
-1. In the repository, set **Settings → Pages → Source** to **GitHub Actions**.
-2. Open **Actions → Publish GitHub Pages → Run workflow** on the branch to publish.
-
-The Pages workflow runs only on manual dispatch. It builds an explicit list of browser assets plus a freshly generated testing workspace into `_site/`. Its build tools run on GitHub's runner; visitors do not need Node.js, and you do not need Node.js installed locally to run this workflow. Saved workspaces, server code, tests, backups and reports are never part of that site build. It uses GitHub's [documented Pages workflow](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
-
-You can upload the browser files listed in [BROWSER-ONLY.md](BROWSER-ONLY.md) to an existing static host without a build. To generate a fresh static bundle locally instead, the optional Node.js command is:
-
-```sh
-npm run build:site
-```
-
-GitHub Pages runs in browser-storage mode. Local and network folder storage requires `node server.cjs`; it is unavailable on a static host. Browser data stays in the visitor's browser, and exports provide portable backups. Relative asset paths support a repository subpath. The app makes no runtime third-party API, analytics or remote-font requests.
-
 ## Tests
 
 Run the dependency-free unit suite:
