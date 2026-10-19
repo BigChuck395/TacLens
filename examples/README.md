@@ -1,6 +1,6 @@
 # Synthetic testing workspace
 
-Import `operations-showcase-workspace.json` through **Settings → Workspaces & backups → Import layers / backups**. Import into an empty workspace. Every layer, mapping note, rule reference, tag, user and work item in this file is generated from `scripts/build-showcase.cjs` and is illustrative.
+Import `operations-showcase-workspace.json` through **Settings → Workspaces & backups → Import layers / backups**. Import into an empty workspace. Every layer, mapping note, rule reference, tag, user and work item in this file is synthetic and illustrative.
 
 The file is generated independently of saved user workspaces. Names of tools, teams, controls and people do not identify real deployments or individuals.
 
@@ -24,4 +24,4 @@ The file is generated independently of saved user workspaces. Names of tools, te
 
 The layer library demonstrates folders, subfolders, filtering, active/deleted tags and an archived hidden intelligence layer. Reports export selected layers only. In-progress work remains available for all saved layers in the app.
 
-Run `npm run build:example` to regenerate this file, or `node scripts/build-showcase.cjs YYYY-MM-DD` for reproducible relative dates. Generation never installs, reads or replaces saved workspace data.
+The example is included as a ready-to-import JSON file. Normal startup starts empty and never installs or replaces saved workspace data.

@@ -19,7 +19,6 @@ node_modules/
 !package.json
 !package-lock.json
 !examples/operations-showcase-workspace.json
-!DISTRIBUTION.json
 
 # Editor and operating-system files
 .DS_Store

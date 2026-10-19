@@ -20,13 +20,15 @@ See [BROWSER-ONLY.md](BROWSER-ONLY.md) for the exact file list, a minimal folder
 
 ## Optional local server for folder storage
 
-Node.js is only needed for the optional folder-storage service, development tests and generation/build scripts. To use automatic workspace files on disk, install Node.js 24 or later and run:
+Node.js is only needed for the optional folder-storage service. To use automatic workspace files on disk, install Node.js 24 or later and run:
 
 ```sh
 node server.cjs
 ```
 
 Open **http://127.0.0.1:5173/**. No dependency installation, account, API key or build step is required. The server listens on the local loopback interface. In this optional mode, workspaces save under `workspaces/`, which is ignored by Git. The first launch starts empty.
+
+Keep `server.cjs` and `workspace-store.cjs` beside the browser application files listed in [BROWSER-ONLY.md](BROWSER-ONLY.md). You can also start the server with `npm start`.
 
 Settings provides theme selection, tag management, workspace exports and cleanup. Manage workspaces can create, rename, delete or open saved workspaces. With the local server, each workspace can use its own folder, including a mapped network drive or UNC path. Keep one active writer per shared workspace; directory locking and stale-save checks help prevent overwrites.
 
@@ -39,23 +41,9 @@ No Node.js is needed to import the included example layers:
 3. Review the preview and confirm the import. Layer imports create new layer identities, so review coverage decisions in their new scope.
 4. Open Landscape, Matrix, Analysis, Coverage review and In progress to explore the examples.
 
-As an optional Node.js alternative, start the complete testing workspace with its original saved coverage decisions and work history:
-
-```sh
-npm run start:example
-```
-
-This explicitly creates a generated testing workspace in ignored local storage and starts the app. Existing workspaces are kept. Running it again reopens the same testing workspace without resetting edits. Stop another server on port 5173 first, or use the `PORT` environment variable for another port.
-
 Use an empty workspace when importing the example so duplicate tool layers do not inflate counts. The example has 32 synthetic layers, over 1,000 mappings, nested folders, tags, fictional users and work history. It demonstrates multiple detection tools, resolved and open deficiencies, independent intelligence coverage reviews, architectural protection and scheduled source reviews. See [examples/README.md](examples/README.md) for useful technique IDs.
 
-To generate new illustrative dates and layer IDs:
-
-```sh
-npm run build:example
-```
-
-This only updates the example JSON. It never reads or replaces installed workspaces. Normal startup never seeds testing data, and there is no demo reset button.
+Import the example manually when you want to try it. Normal startup never seeds testing data, and there is no demo reset button.
 
 ## Coverage model
 
@@ -72,31 +60,8 @@ The app and analyst report matrices grow down the page, preserve full technique 
 
 JSON workspace exports preserve editable data, including hidden layers. Keep reports and workspace exports outside the repository or in the ignored `reports/` and `backups/` folders.
 
-## Tests
-
-Run the dependency-free unit suite:
-
-```sh
-npm test
-```
-
-Selected browser regressions are included for the matrix, both report formats, work tracking in reports, disk workspaces and shared folders. To run these with Microsoft Edge installed:
-
-```sh
-npm install --save-dev playwright
-node tests/matrix-layout-browser.cjs
-node tests/elt-report-browser.cjs
-node tests/report-work-layers-browser.cjs
-node tests/disk-workspaces-browser.cjs
-node tests/workspace-folders-browser.cjs
-node tests/distribution-browser.cjs
-node tests/browser-only-browser.cjs
-```
-
-These tests use isolated browser contexts and temporary test storage. Screenshots and downloaded reports go to ignored `test-results/`. The distribution check also verifies startup without user data and imports the example on a simulated static host.
-
 ## ATT&CK catalog and attribution
 
 The bundled catalog is in `data.js`. MITRE's ATT&CK content retains its [license and attribution](LICENSE-ATTACK.txt). ATT&CK is a registered trademark of The MITRE Corporation. This package does not choose or change a license for the application source.
 
-To rebuild the catalog, place the official Enterprise STIX collection in `enterprise-attack.json`, review its version and license, then run `npm run build:data` and `npm test`. The source STIX download is ignored; the generated `data.js` is distributed.
+The ATT&CK catalog is bundled in `data.js`; no download or generation step is needed to run the app.

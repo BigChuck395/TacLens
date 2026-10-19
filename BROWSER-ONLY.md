@@ -51,7 +51,7 @@ TacLens/
     operations-showcase-workspace.json   (optional testing data)
 ```
 
-You do not need `server.cjs`, `workspace-store.cjs`, `package.json`, `scripts/`, `tests/`, `.github/`, `node_modules/` or the original `enterprise-attack.json` download to run the browser-only app. The compiled catalog is already in `data.js`.
+You do not need `server.cjs`, `workspace-store.cjs`, `package.json`, `.github/`, `node_modules/` or the original `enterprise-attack.json` download to run the browser-only app. The catalog is already in `data.js`.
 
 ## Where your work is saved
 
@@ -59,13 +59,13 @@ Browser-only mode stores your work in that browser's local storage. It supports 
 
 Use the same browser and location for continued work, and keep exported JSON backups. Clearing browser data or changing browsers or app locations can make the previous browser-stored workspace unavailable. JSON imports let you move your work between copies of the app.
 
-The optional Node.js server adds automatic workspace files on disk, configurable local/network folders and shared-folder synchronization. Node.js is also used for development tests and catalog/example generation. None of these Node.js steps is needed to open the browser-only app or an exported report.
+The optional Node.js server adds automatic workspace files on disk, configurable local/network folders and shared-folder synchronization. Keep `server.cjs` and `workspace-store.cjs` beside the browser application files, then run `node server.cjs` and open **http://127.0.0.1:5173/**. No dependency installation is needed. The browser-only app and exported reports do not require this server.
 
 ## Static hosting and GitHub Pages
 
 These same browser files can be served by a static host. Visitors open its published URL and use browser storage, without installing Node.js. Keep the filenames and relative layout above when hosting under a repository subpath.
 
-The full GitHub package includes an optional Pages workflow. Its Node.js build runs on GitHub's runner, not on visitors' computers. You can instead publish the already-prepared browser files without running a local build.
+The repository includes an optional Pages workflow that copies the browser files and included synthetic example directly, without Node.js or a build step. To use it, set **Settings → Pages → Source** to **GitHub Actions**, then open **Actions → Publish GitHub Pages → Run workflow**. Publishing runs only when you start that workflow. You can also upload the browser files to another static host.
 
 ## Opening an exported report
 

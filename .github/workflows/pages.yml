@@ -16,14 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          package-manager-cache: false
-      - name: Unit tests
-        run: npm test
-      - name: Build only browser assets and generated testing data
-        run: npm run build:site
+      - name: Prepare browser files and synthetic testing data
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site/examples
+          cp index.html styles.css core.js work-ui.js work-report.js insights.js matrix.js elt-report.js app.js data.js storage.js favicon.ico LICENSE-ATTACK.txt _site/
+          cp examples/operations-showcase-workspace.json _site/examples/
+          touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
