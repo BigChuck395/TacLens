@@ -19,6 +19,12 @@ This distribution contains application code and generated testing data. It inclu
 
 Select or deselect layers in the library to change the evidence included in comparisons and reports. JSON backups preserve editable workspace data; HTML reports are read-only snapshots.
 
+### Customize assessment terminology
+
+Open **Settings → Terminology** to replace the default **Finding / Findings** labels for the current workspace. Enter singular and plural forms, such as **Gap / Gaps**, **Opportunity / Opportunities**, or **Deficiency / Deficiencies**, then select **Save terminology**. The app, layer type labels, matrix, analysis, work tracker and exported HTML reports use your wording. **Restore defaults** returns to Finding / Findings.
+
+Each workspace keeps its own labels. Custom layer names, folders, notes, mapping identities and coverage decisions stay as entered. Workspace folders and JSON backups retain the setting. When importing a workspace or layer file that includes terminology, the import preview lets you choose whether to adopt those labels; older files continue to work with the current workspace's terminology.
+
 ### Archive layers
 
 Use **Archive** on a layer in the Layer library, or **Archive layer** in its settings. For intelligence, you can also archive directly from **Coverage review → Intelligence reviews** or the review dialog. Archiving keeps the complete layer, including mappings, notes, folders, tags, tracked work and its review schedule. It removes the layer from coverage totals, analysis, work queues, scheduled intelligence reviews and HTML reports.

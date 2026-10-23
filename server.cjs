@@ -1,7 +1,7 @@
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=__dirname,{WorkspaceStore}=require('./workspace-store.cjs'),catalogContext={};vm.runInNewContext(fs.readFileSync(path.join(root,'data.js'),'utf8'),catalogContext);
 const browserOnly=process.env.STRATA_STORAGE_MODE==='browser',store=new WorkspaceStore(process.env.STRATA_STORAGE_DIR||path.join(root,'workspaces'),catalogContext.ATTACK_DATA);
-const allowed=new Set(['index.html','styles.css','core.js','work-ui.js','work-report.js','insights.js','matrix.js','elt-report.js','app.js','history.js','data.js','storage.js','favicon.ico']);
+const allowed=new Set(['index.html','styles.css','terminology.js','core.js','work-ui.js','work-report.js','insights.js','matrix.js','elt-report.js','app.js','history.js','data.js','storage.js','favicon.ico']);
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.ico':'image/x-icon'};
 function body(req,res,json,max,handler){let size=0,chunks=[],tooLarge=false;req.on('data',chunk=>{size+=chunk.length;if(size>max){if(!tooLarge){tooLarge=true;chunks=[];json(413,{error:'Request exceeds the storage size limit.'});}return;}chunks.push(chunk);});req.on('end',async()=>{if(tooLarge)return;try{const result=await handler(JSON.parse(Buffer.concat(chunks).toString('utf8')));json(200,result);}catch(error){json(error.status||(error.code?500:400),{error:error.message});}});}
 const server=http.createServer((req,res)=>{

@@ -46,7 +46,7 @@
     const events=[];let omitted=0;
     const emit=(kind,layer,entry,fields,title)=>{if(!fields.length)return;if(events.length>=LIMIT-1){omitted++;return;}events.push({id:root.crypto.randomUUID(),timestamp:iso(timestamp),kind,title:title||kinds[kind],layerId:layer?.id||'',layerName:layer?.name||'',layerType:layer?.type||'',mappingId:entry?.id||'',mappingName:entry?.name||'',techniqueID:entry?.techniqueID||'',fields});};
     if(!before){emit('workspace-added',null,null,[field('name','Workspace name','',after.name),field('layers','Layers','',String(after.layers?.length||0))].filter(Boolean));return events;}
-    const workspaceFields=w=>({name:{label:'Workspace name',value:w.name},folders:{label:'Folder organization',value:(w.folders||[]).join('\n')},tags:{label:'Tag library',value:(w.tags||[]).join('\n')},users:{label:'User library',value:(w.users||[]).join('\n')}});
+    const workspaceFields=w=>({name:{label:'Workspace name',value:w.name},folders:{label:'Folder organization',value:(w.folders||[]).join('\n')},tags:{label:'Tag library',value:(w.tags||[]).join('\n')},users:{label:'User library',value:(w.users||[]).join('\n')},termSingular:{label:'Singular assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.singular},termPlural:{label:'Plural assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.plural}});
     emit('workspace-updated',null,null,compare(workspaceFields(before),workspaceFields(after)));
     const oldLayers=new Map((before.layers||[]).map(l=>[l.id,l])),newLayers=new Map((after.layers||[]).map(l=>[l.id,l]));
     for(const layer of after.layers||[]){

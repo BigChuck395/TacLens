@@ -1,11 +1,13 @@
 (function(root) {
   'use strict';
+  const Terms=root.TacLensTerms||(typeof require==='function'?require('./terminology.js'):null);
   const types = {
-    opportunity: {name:'Opportunities', short:'Opportunities', symbol:'O', color:'#d87836', statuses:{finding:'Opportunity', resolved:'Resolved',accepted:'Risk accepted'}},
+    opportunity: {name:'Findings', short:'Findings', symbol:'F', color:'#d87836', statuses:{finding:'Finding', resolved:'Resolved',accepted:'Risk accepted'}},
     detection: {name:'Detection coverage', short:'Detection', symbol:'D', color:'#4483c1', statuses:{present:'Detection present'}},
     intel: {name:'Threat intelligence', short:'Intel', symbol:'I', color:'#9270b7', statuses:{intelligence:'Intelligence'}}
   };
   const escape = s => String(s ?? '').replace(/[&<>"']/g,c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function configureTerminology(value){const config=Terms.configure(value),labels=config.opportunity;Object.assign(types.opportunity,{name:labels.plural,short:labels.plural,symbol:Terms.symbol(config)});types.opportunity.statuses.finding=labels.singular;return config;}
   const mappingUUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   // Legacy JSON stays importable; new saves use opportunity and stable per-mapping IDs.
   function layerType(value){return ['hunt','deficiency','deficiencies','opportunities','opportunity'].includes(String(value).toLowerCase())?'opportunity':value;}
@@ -30,9 +32,9 @@
     const mappings=entries.filter(e=>e.type==='opportunity'),counts={present:0,absent:0,unknown:0};
     mappings.forEach(e=>counts[loggingValue(e.logging)]++);
     const total=mappings.length,states=Object.keys(counts).filter(key=>counts[key]),key=!total?'none':states.length>1?'mixed':states[0];
-    const label={none:'No opportunity mappings',present:'Logging present',absent:'No logging',unknown:'Logging not reviewed',mixed:'Logging varies by mapping'}[key];
+    const label={none:TacLensTerms.text('No opportunity mappings'),present:'Logging present',absent:'No logging',unknown:'Logging not reviewed',mixed:'Logging varies by mapping'}[key];
     const short={none:'',present:'Logs ✓',absent:'No logs',unknown:'Logs ?',mixed:'Logs mixed'}[key];
-    const detail=total?[counts.present+' logging present',counts.absent+' no logging',counts.unknown+' not reviewed'].join(' · '):'No opportunity mappings';
+    const detail=total?[counts.present+' logging present',counts.absent+' no logging',counts.unknown+' not reviewed'].join(' · '):TacLensTerms.text('No opportunity mappings');
     return {key,label,short,detail,total,...counts};
   }
   const defenseChoices=[['unknown','Not reviewed'],['control','Compensating control present'],['detection','Detection present'],['both','Compensating control and detection present'],['none','Nothing present']];
@@ -46,7 +48,7 @@
   function defenseForType(type,value,detected=false){const defense=defenseValue(value,detected);return type==='opportunity'&&defense==='unknown'?'none':defense;}
   function opportunityStatus(type,defense,status){if(type==='opportunity'&&status==='accepted')return 'accepted';return type==='opportunity'?(['control','detection','both'].includes(defenseValue(defense))?'resolved':'finding'):status;}
   function assertOpportunityResolution(type,status,defense){
-    if(type==='opportunity'&&status==='resolved'&&!['control','detection','both'].includes(defenseValue(defense)))throw Error('A resolved opportunity needs a recorded detection, compensating control, or both. Nothing present must remain open.');
+    if(type==='opportunity'&&status==='resolved'&&!['control','detection','both'].includes(defenseValue(defense)))throw Error(TacLensTerms.text('A resolved opportunity needs a recorded detection, compensating control, or both. Nothing present must remain open.'));
   }
   function records(layers,id) {const detected=layers.some(d=>isLayerActive(d)&&d.type==='detection'&&d.entries.some(m=>m.techniqueID===id&&['present','validated','unvalidated'].includes(m.status)));return layers.filter(isLayerActive).flatMap(l=>l.entries.filter(e=>e.techniqueID===id).map(e=>({...e,status:opportunityStatus(l.type,defenseForType(l.type,e.compensatingControl,detected),e.status),...(['opportunity','intel'].includes(l.type)?{compensatingControl:defenseForType(l.type,e.compensatingControl,detected)}:{}),layer:l.name,layerId:l.id,type:l.type,...(l.type==='intel'?{review:intelReview(l.metadata)}:{})})));}
   function intelReview(metadata,today=new Date().toISOString().slice(0,10)) {
@@ -159,7 +161,7 @@
     return result;
   }
   function normalizeSnooze(value){
-    if(!value||!validDay(value.until)||!validDay(value.setOn)||typeof value.note!=='string'||!value.note.trim()||value.note.length>2000||value.cancelledOn&&!validDay(value.cancelledOn))throw Error('Invalid opportunity snooze.');
+    if(!value||!validDay(value.until)||!validDay(value.setOn)||typeof value.note!=='string'||!value.note.trim()||value.note.length>2000||value.cancelledOn&&!validDay(value.cancelledOn))throw Error(TacLensTerms.text('Invalid opportunity snooze.'));
     return {until:value.until,setOn:value.setOn,note:value.note.trim(),...(value.cancelledOn?{cancelledOn:value.cancelledOn}:{})};
   }
   function normalizeWork(value){
@@ -187,7 +189,7 @@
   function workCoverage(layers,layerId,id,date,mappingId){
     const layer=layers.find(l=>l.id===layerId),entry=findMapping(layer,id,mappingId);if(!entry||layer.archived||!['opportunity','intel'].includes(layer.type))return {ready:false,label:'Source mapping unavailable'};
     if(layer.type==='opportunity'&&entry.status==='accepted')return {ready:true,riskAccepted:true,label:'Risk accepted · no coverage implied'};
-    if(layer.type==='opportunity'){const ready=opportunityStatus('opportunity',entry.compensatingControl,entry.status)==='resolved';return {ready,label:ready?'Opportunity resolved':'Opportunity still open'};}
+    if(layer.type==='opportunity'){const ready=opportunityStatus('opportunity',entry.compensatingControl,entry.status)==='resolved';return {ready,label:ready?TacLensTerms.text('Opportunity resolved'):TacLensTerms.text('Opportunity still open')};}
     const s=summary(layers.map(l=>l.id===layerId?{...l,visible:true}:l),id),assessment=s.intelAssessments.find(x=>x.layerId===layerId&&x.mappingId===entry.id),due=intelReview(layer.metadata,date).due;
     const ready=!!assessment?.covered&&assessment.state!=='pending'&&!due;
     return {ready,label:due?'Intelligence review due':assessment?.state==='pending'?'Intel detection coverage awaits review':assessment?.covered?'Intelligence coverage confirmed':'Intelligence needs confirmed coverage'};
@@ -209,17 +211,17 @@
     if(patch.assignee!==undefined){const name=String(patch.assignee||'').trim();if(name&&!result.users.includes(name)&&name!==work.assignee)throw Error('Choose an existing user or create one.');if(name!==work.assignee){work.assignee=name;append(name?'Assigned to '+name+'.':'Assignment cleared.','assigned');}}
     if(patch.action==='add_note'&&!note)throw Error('Enter a work note.');
     if(note)append(note,'note');
-    if(patch.action==='close'){const coverage=workCoverage(result.layers,layerId,id,date,entry.id);if(!coverage.ready)throw Error(coverage.label+'. Record a defense, accept the opportunity risk, or complete the intelligence review before closing.');work.status='closed';work.closedOn=date;append('Closed work item.','closed');}
+    if(patch.action==='close'){const coverage=workCoverage(result.layers,layerId,id,date,entry.id);if(!coverage.ready)throw Error(coverage.label+TacLensTerms.text('. Record a defense, accept the opportunity risk, or complete the intelligence review before closing.'));work.status='closed';work.closedOn=date;append('Closed work item.','closed');}
     if(patch.action==='queue'){work.status='queued';delete work.closedOn;append('Returned to the work queue.','queued');}
     work.updatedOn=date;entry.work=work;return result;
   }
   function snoozeOpportunity(layers,id,layerId,patch,date,data){
     if(!data.techniques.some(t=>t.id===id)||!validDay(date))throw Error('Choose a valid technique and date.');
     const result=structuredClone(layers),layer=result.find(l=>l.id===layerId&&l.type==='opportunity'&&isLayerActive(l)),entry=findMapping(layer,id,patch.mappingId);
-    if(!entry||opportunityStatus('opportunity',entry.compensatingControl,entry.status)!=='finding')throw Error('Select an unresolved opportunity.');
+    if(!entry||opportunityStatus('opportunity',entry.compensatingControl,entry.status)!=='finding')throw Error(TacLensTerms.text('Select an unresolved opportunity.'));
     Object.assign(entry,opportunityMetadata(entry,entry,date));
-    if(patch.cancel){if(!entry.opportunitySnooze)throw Error('This opportunity is not snoozed.');entry.opportunitySnooze.cancelledOn=date;}
-    else{if(!validDay(patch.until)||patch.until<=date)throw Error('Choose a future date to resume this opportunity.');entry.opportunitySnooze=normalizeSnooze({until:patch.until,setOn:date,note:patch.note});}
+    if(patch.cancel){if(!entry.opportunitySnooze)throw Error(TacLensTerms.text('This opportunity is not snoozed.'));entry.opportunitySnooze.cancelledOn=date;}
+    else{if(!validDay(patch.until)||patch.until<=date)throw Error(TacLensTerms.text('Choose a future date to resume this opportunity.'));entry.opportunitySnooze=normalizeSnooze({until:patch.until,setOn:date,note:patch.note});}
     return result;
   }
   function analysisFacts(s,date){
@@ -255,11 +257,11 @@
     const result=structuredClone(layers);let layer;
     if(patch.layerId==='__new'){if(result.length>=100)throw Error('A workspace supports up to 100 layers.');layer={id:root.crypto.randomUUID(),name:'Coverage assessments',type:'opportunity',visible:true,folder:'',metadata:layerMetadata({}),entries:[]};result.push(layer);}
     else layer=result.find(l=>l.id===patch.layerId&&isLayerActive(l)&&['opportunity','intel'].includes(l.type));
-    if(!layer)throw Error('Choose a selected Opportunities or Intel layer.');
+    if(!layer)throw Error(TacLensTerms.text('Choose a selected Opportunities or Intel layer.'));
     const defense=defenseForType(layer.type,patch.defense),old=findMapping(layer,id,patch.mappingId),entry={...(old||{}),id:old?.id||root.crypto.randomUUID(),name:old?.name||'',techniqueID:id,status:opportunityStatus(layer.type,defense,layer.type==='opportunity'?'finding':'intelligence'),compensatingControl:defense,date,notes:[old?.notes||'',String(patch.notes||'').trim()].filter(Boolean).join('\n')};
     if(patch.mappingId&&!old)throw Error('The selected mapping no longer exists.');
     if(entry.notes.length>20000)throw Error('Combined notes exceed 20,000 characters.');
-    if(patch.riskAccepted&&layer.type!=='opportunity')throw Error('Risk acceptance is available on Opportunities mappings only.');
+    if(patch.riskAccepted&&layer.type!=='opportunity')throw Error(TacLensTerms.text('Risk acceptance is available on Opportunities mappings only.'));
     if(layer.type==='opportunity'){entry.logging=loggingValue(patch.logging===undefined?old?.logging:patch.logging);applyRiskAcceptance(entry,old,{...patch,riskAccepted:patch.riskAccepted===true},date);Object.assign(entry,opportunityMetadata(old,entry,date));}
     if(layer.type==='intel')entry.addedOn=old?.addedOn||old?.date||date;
     if(layer.type==='intel'&&old?.compensatingControl!==patch.defense)delete entry.intelDetectionReview;
@@ -278,7 +280,7 @@
     if(!validDay(entry.date))throw Error('Choose a valid review date.');
     if(layer.type==='detection'){entry.status='present';entry.detections=detectionNames(patch.detections===undefined?old?.detections:patch.detections);}
     else{entry.compensatingControl=defenseForType(layer.type,patch.compensatingControl===undefined?old?.compensatingControl:patch.compensatingControl);entry.status=opportunityStatus(layer.type,entry.compensatingControl,layer.type==='opportunity'?'finding':'intelligence');}
-    if(patch.riskAccepted&&layer.type!=='opportunity')throw Error('Risk acceptance is available on Opportunities mappings only.');
+    if(patch.riskAccepted&&layer.type!=='opportunity')throw Error(TacLensTerms.text('Risk acceptance is available on Opportunities mappings only.'));
     if(layer.type==='opportunity'){entry.logging=loggingValue(patch.logging===undefined?old?.logging:patch.logging);applyRiskAcceptance(entry,old,patch,entry.date);Object.assign(entry,opportunityMetadata(old,entry,entry.date));}
     if(layer.type==='intel'){entry.addedOn=old?.addedOn||old?.date||date;if(old&&entry.compensatingControl!==old.compensatingControl)delete entry.intelDetectionReview;}
     return old?layer.entries.map(item=>item.id===old.id?entry:item):[...layer.entries,entry];
@@ -302,7 +304,7 @@
   }
   function bulkLogging(layer,ids,value){
     if(layer.archived)throw Error('Restore this layer before editing its mappings.');
-    if(layer.type!=='opportunity')throw Error('Logging flags belong to Opportunities mappings.');
+    if(layer.type!=='opportunity')throw Error(TacLensTerms.text('Logging flags belong to Opportunities mappings.'));
     const selected=new Set(ids),logging=loggingValue(value);
     if(!layer.entries.some(e=>selected.has(e.techniqueID)))throw Error('Select mapped techniques to update logging.');
     return layer.entries.map(e=>selected.has(e.techniqueID)?{...e,logging}:e);
@@ -344,7 +346,7 @@
   function categoryStatus(type,entries) {
     const statuses=[...new Set(entries.filter(e=>e.type===type).map(e=>type==='intel'?'intelligence':type==='opportunity'&&e.status==='validated'?'finding':e.status))];
     if(type==='detection')return statuses.some(s=>['present','validated','unvalidated'].includes(s))?{label:'Detection present',tone:'ready'}:{label:'No detection mapped',tone:'unknown'};
-    const labels={accepted:'Risk accepted',finding:'Opportunity',validated:'Validated',resolved:'Resolved',implemented:'Implemented',planned:'Planned',gap:'Opportunity',intelligence:'Intelligence',relevant:'Intelligence',observed:'Intelligence',historical:'Intelligence'};
+    const labels={accepted:'Risk accepted',finding:TacLensTerms.text('Opportunity'),validated:'Validated',resolved:'Resolved',implemented:'Implemented',planned:'Planned',gap:TacLensTerms.text('Opportunity'),intelligence:'Intelligence',relevant:'Intelligence',observed:'Intelligence',historical:'Intelligence'};
     if(!statuses.length)return {label:'No mapping',tone:'unknown'};
     const tone=statuses.some(s=>s==='gap'||s==='finding')?'issue':statuses.includes('accepted')?'accepted':statuses.some(s=>s==='resolved'||s==='validated'||s==='implemented')?'ready':statuses.some(s=>s==='planned'||s==='unvalidated')?'pending':'context';
     return {label:statuses.map(s=>labels[s]||s).join(' + '),tone};
@@ -464,13 +466,13 @@
     else if(action==='both'){
       let layer=result.layers.find(l=>l.id===layerId&&isLayerActive(l)&&l.type!=='detection');
       if(layerId==='__new'){if(result.layers.length>=100)throw Error('A workspace supports up to 100 layers.');layer={id:root.crypto.randomUUID(),name:'Coverage assessments',type:'opportunity',visible:true,folder:'',metadata:layerMetadata({}),entries:[]};result.layers.push(layer);}
-      if(!layer)throw Error('Choose an Opportunities or Intel layer for the assessment.');
+      if(!layer)throw Error(TacLensTerms.text('Choose an Opportunities or Intel layer for the assessment.'));
       let entry=findMapping(layer,id,mappingId);if(mappingId&&!entry)throw Error('The selected mapping no longer exists.');if(!entry){entry={id:root.crypto.randomUUID(),name:'',techniqueID:id,status:layer.type==='opportunity'?'resolved':'intelligence',notes:''};layer.entries.push(entry);}
       entry.compensatingControl='both';entry.status=opportunityStatus(layer.type,'both',entry.status);entry.date=date;delete result.recommendationReviews[id];
     }else throw Error('Unknown coverage review action.');
     return result;
   }
-  const api = {isLayerActive,setLayerArchived,bulkLogging,loggingChoices,loggingValue,loggingSummary,normalizeRiskAcceptance,applyRiskAcceptance,layerType,opportunityLabel,mappingName,findMapping,saveMapping,normalizeWork,workInfo,normalizeUsers,createUser,deleteUser,workCoverage,workItems,updateWork,validDay,opportunityMetadata,normalizeSnooze,snoozeOpportunity,analysisFacts,analysisItems,recordDefense,detectionReviewFingerprint,intelDetectionAssessments,reviewIntelDetection,normalizeIntelDetectionReview,recommendationItems,reviewRecommendation,opportunityStatus,assertOpportunityResolution,types,defenseChoices,defenseChoicesForType,defenseValue,defenseForType,escape,records,summary,validateLayers,bulkEntries,folderPath,layerMetadata,matchesLayer,moveLayer,moveFolder,categoryStatus,assessmentNotes,controlTag,controlStatus,activeTags,deleteTag,cleanupLibrary,quickUpdate,detectionCoverage,detectionNames,intelReview,navigatorSource,convertNavigator,tacticStatistics,evidenceStatistics};
+  const api = {configureTerminology,isLayerActive,setLayerArchived,bulkLogging,loggingChoices,loggingValue,loggingSummary,normalizeRiskAcceptance,applyRiskAcceptance,layerType,opportunityLabel,mappingName,findMapping,saveMapping,normalizeWork,workInfo,normalizeUsers,createUser,deleteUser,workCoverage,workItems,updateWork,validDay,opportunityMetadata,normalizeSnooze,snoozeOpportunity,analysisFacts,analysisItems,recordDefense,detectionReviewFingerprint,intelDetectionAssessments,reviewIntelDetection,normalizeIntelDetectionReview,recommendationItems,reviewRecommendation,opportunityStatus,assertOpportunityResolution,types,defenseChoices,defenseChoicesForType,defenseValue,defenseForType,escape,records,summary,validateLayers,bulkEntries,folderPath,layerMetadata,matchesLayer,moveLayer,moveFolder,categoryStatus,assessmentNotes,controlTag,controlStatus,activeTags,deleteTag,cleanupLibrary,quickUpdate,detectionCoverage,detectionNames,intelReview,navigatorSource,convertNavigator,tacticStatistics,evidenceStatistics};
   root.Strata = api;
   if (typeof module !== 'undefined') module.exports = api;
 })(globalThis);

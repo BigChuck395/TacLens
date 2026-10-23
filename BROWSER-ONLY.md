@@ -14,7 +14,7 @@ Keep the app files together. Moving only `index.html` breaks its relative CSS an
 
 ## Files you need
 
-These 12 files are required for the application, kept together in one folder:
+These 13 files are required for the application, kept together in one folder:
 
 | File | Purpose |
 | --- | --- |
@@ -22,6 +22,7 @@ These 12 files are required for the application, kept together in one folder:
 | `styles.css` | App layout and themes. |
 | `data.js` | Bundled ATT&CK catalog, including its attribution. |
 | `history.js` | Recent layer and mapping edit history. |
+| `terminology.js` | Workspace terminology used by app labels and reports. |
 | `core.js` | Mapping, coverage and workspace logic. |
 | `work-ui.js` | Work tracking and coverage review interfaces. |
 | `work-report.js` | Work tracker in exported reports. |
@@ -38,6 +39,7 @@ TacLens/
   index.html
   styles.css
   data.js
+  terminology.js
   core.js
   history.js
   work-ui.js

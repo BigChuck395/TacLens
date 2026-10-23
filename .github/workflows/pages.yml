@@ -21,7 +21,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site/examples
-          cp index.html styles.css core.js work-ui.js work-report.js insights.js matrix.js elt-report.js history.js app.js data.js storage.js favicon.ico LICENSE-ATTACK.txt _site/
+          cp index.html styles.css terminology.js core.js work-ui.js work-report.js insights.js matrix.js elt-report.js history.js app.js data.js storage.js favicon.ico LICENSE-ATTACK.txt _site/
           cp examples/operations-showcase-workspace.json _site/examples/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5

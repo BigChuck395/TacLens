@@ -171,3 +171,4 @@
 [data-theme=dark] .library-dock .layer-archive-badge{background:#2d3b4a;color:#d5dee8}
 .library-dock .layer-actions .restore-layer{border-color:#779fc1;background:#e6effb;color:#244e7a;font-weight:650}
 [data-theme=dark] .library-dock .layer-actions .restore-layer{border-color:#7195bc;background:#213a55;color:#c3ddff}
+.terminology-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.terminology-fields label{display:grid;gap:7px;font-size:12px}.terminology-fields input{width:100%;min-width:0}.terminology-examples,#terminology-preview{font-size:12px;line-height:1.7;color:var(--text-secondary)}#terminology-preview{font-weight:600;color:var(--ink)}.import-terminology-choice{display:flex;align-items:start;gap:10px;font-size:12px;line-height:1.6;margin-top:16px}.import-terminology-choice input{flex:0 0 auto;width:16px;height:16px;margin-top:3px}@media(max-width:600px){.terminology-fields{grid-template-columns:minmax(0,1fr)}}
