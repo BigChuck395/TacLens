@@ -1,5 +1,6 @@
 const fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto'),os=require('node:os');
 const {validateLayers,folderPath,activeTags,normalizeUsers}=require('./core.js');
+const History=require('./history.js');
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const fail=(message,status=400)=>Object.assign(Error(message),{status});
 function absoluteFolder(value){if(typeof value!=='string'||!value.trim()||value.length>32760||value.includes('\0')||!path.isAbsolute(value.trim())||/^\\\\[?.]\\/.test(value.trim()))throw fail('Enter a full folder path, such as Z:\\TacLens or \\\\server\\share\\TacLens.');return path.resolve(value.trim());}
@@ -41,7 +42,7 @@ class WorkspaceStore {
    if(!w||!uuid.test(w.id)||ids.has(w.id.toLowerCase())||w.schema!=='strata-workspace'||w.version!==1||typeof w.name!=='string'||!w.name.trim()||w.name.length>160)throw Error('Invalid workspace identity or name.');ids.add(w.id.toLowerCase());
    const checked=validateLayers(w.layers,this.catalog);if(checked.unknown)throw Error('Workspace contains unknown technique IDs.');
    const layerIds=new Set();const layers=checked.layers.map((l,i)=>{const id=w.layers[i]?.id?.toLowerCase();if(!uuid.test(id)||layerIds.has(id))throw Error('Invalid or duplicate layer ID.');layerIds.add(id);return {...l,id};});
-   return {...w,id:w.id.toLowerCase(),name:w.name.trim(),folders:[...new Set((w.folders||[]).map(folderPath).filter(Boolean))],tags:activeTags(w.tags,layers),users:normalizeUsers(w.users),collapsedFolders:(w.collapsedFolders||[]).map(folderPath).filter(Boolean),layers};
+   return {...w,changeHistory:History.normalize(w.changeHistory),changeTrackingSince:History.iso(w.changeTrackingSince),id:w.id.toLowerCase(),name:w.name.trim(),folders:[...new Set((w.folders||[]).map(folderPath).filter(Boolean))],tags:activeTags(w.tags,layers),users:normalizeUsers(w.users),collapsedFolders:(w.collapsedFolders||[]).map(folderPath).filter(Boolean),layers};
   });const activeId=String(library.activeId||'').toLowerCase();if(!ids.has(activeId))throw Error('Choose an existing active workspace.');return {version:1,activeId,workspaces};
  }
  async withLock(directory,work){

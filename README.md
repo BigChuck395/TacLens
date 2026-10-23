@@ -1,6 +1,6 @@
 # TacLens
 
-An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detection tools, deficiencies and intelligence using categorical coverage assessments, then export detailed analyst reports or a concise executive matrix.
+An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detection tools, opportunities and intelligence using categorical coverage assessments, then export detailed analyst reports or a concise executive matrix.
 
 **Live app:** [Launch TacLens](https://bigchuck395.github.io/TacLens/) — no installation required. Workspaces stay in your browser or folders you approve.
 
@@ -11,13 +11,19 @@ This distribution contains application code and generated testing data. It inclu
 ## How to use TacLens
 
 1. **Create a workspace.** Use **Switch / manage workspaces** to keep separate assessments or teams in their own workspaces. You can also import the included testing workspace to explore the tool.
-2. **Add your layers.** Open **Layer library → Add a layer** and choose Detection coverage, Deficiencies or Threat intelligence. Use a detection layer for each tool, and separate assessment or intelligence layers by source. Give layers meaningful names and organize them with folders and tags.
-3. **Map techniques.** Open a layer's mapping editor, select individual techniques or bulk-select a group, then apply your evidence. Record the defense for deficiency and intelligence mappings, with a review date and optional notes.
+2. **Add your layers.** Open **Layer library → Add a layer** and choose Detection coverage, Opportunities or Threat intelligence. Use a detection layer for each tool, and separate assessment or intelligence layers by source. Give layers meaningful names and organize them with folders and tags.
+3. **Map techniques.** Open a layer's mapping editor, select individual techniques or bulk-select a group, then apply your evidence. Record the defense for opportunity and intelligence mappings, with a review date and optional notes.
 4. **Review coverage.** Use **Landscape** for totals, **ATT&CK matrix** to explore techniques, and **Analysis** to find outstanding work. **Coverage review** helps verify existing protection and review intelligence sources when due.
 5. **Track action.** Select **Start work** to assign a mapping and add progress notes. Use **Record defense** when protection changes, then close the tracked work once its coverage is confirmed.
 6. **Save and share.** In Chrome or Edge, [choose a workspace folder](#save-workspaces-to-folders) for automatic disk saves. You can also export a JSON backup. Use **Export HTML report** for a detailed analyst report or a concise ELT report.
 
 Select or deselect layers in the library to change the evidence included in comparisons and reports. JSON backups preserve editable workspace data; HTML reports are read-only snapshots.
+
+### Archive layers
+
+Use **Archive** on a layer in the Layer library, or **Archive layer** in its settings. For intelligence, you can also archive directly from **Coverage review → Intelligence reviews** or the review dialog. Archiving keeps the complete layer, including mappings, notes, folders, tags, tracked work and its review schedule. It removes the layer from coverage totals, analysis, work queues, scheduled intelligence reviews and HTML reports.
+
+Choose **Archived layers** in the library's archive filter to find it later, then select **Restore layer**. Restoration selects the layer again; its original review schedule is retained, so an overdue intelligence review becomes due again. Selecting all layers or a folder never restores archived layers. Workspace folders and JSON exports retain archived layers, and Recent changes records archiving and restoration.
 
 ## Run without Node.js
 
@@ -88,14 +94,14 @@ No Node.js is needed to import the included example layers:
 3. Review the preview and confirm the import. Layer imports create new layer identities, so review coverage decisions in their new scope.
 4. Open Landscape, Matrix, Analysis, Coverage review and In progress to explore the examples.
 
-Use an empty workspace when importing the example so duplicate tool layers do not inflate counts. The example has 32 synthetic layers, over 1,000 mappings, nested folders, tags, fictional users and work history. It demonstrates multiple detection tools, resolved and open deficiencies, independent intelligence coverage reviews, architectural protection and scheduled source reviews. See [examples/README.md](examples/README.md) for useful technique IDs.
+Use an empty workspace when importing the example so duplicate tool layers do not inflate counts. The example has 32 synthetic layers, over 1,000 mappings, nested folders, tags, fictional users and work history. It demonstrates multiple detection tools, resolved and open opportunities, independent intelligence coverage reviews, architectural protection and scheduled source reviews. See [examples/README.md](examples/README.md) for useful technique IDs.
 
 Import the example manually when you want to try it. Normal startup never seeds testing data, and there is no demo reset button.
 
 ## Coverage model
 
 - Each detection tool layer counts once for an exact technique. Optional rule names do not increase the tool count. Detection mappings are always positive evidence.
-- Deficiencies are open with **Nothing present** and resolved when a detection, compensating control or both is recorded on that assessment.
+- Opportunities are open with **Nothing present** and resolved when a detection, compensating control or both is recorded on that assessment.
 - Intelligence also supports **Not reviewed**. When detections are present, review whether they cover the behavior described by each intelligence source. An uncovered intelligence mapping does not negate the detection tool mapping.
 - Parent and sub-technique evidence remain independent. Unmapped parents may appear as context for mapped children. The executive report rolls those mappings into parent tiles, with the highest-priority issue determining each color.
 
@@ -105,10 +111,38 @@ The app and analyst report matrices grow down the page, preserve full technique 
 
 **Export HTML report** is available from the main pages. Choose Standard for the analyst report or ELT for the executive report. Analysis and the work tracker are optional where applicable. Reports include the selected layers and open offline as read-only files.
 
-JSON workspace exports preserve editable data, including hidden layers. Keep reports and workspace exports outside the repository or in the ignored `reports/` and `backups/` folders.
+JSON workspace exports preserve editable data, including hidden layers and recent-change history. Keep reports and workspace exports outside the repository or in the ignored `reports/` and `backups/` folders.
+
+## Review recent changes
+
+Open **Recent changes** to see saved edits to layers and individual mappings, including notes, defenses, logging, risk acceptance and tracked work. Expand **What changed** for before-and-after values, or **Open mapping** to revisit that exact scenario. Filter by date, layer or change type, or search changed values. This is an edit history with no review or acknowledgement steps.
+
+Tracking starts with this version; earlier edits cannot be reconstructed. Each workspace keeps up to 500 recent changes, within a 1 MB history limit. Older records roll off and long values appear as excerpts. Workspace folders and JSON workspace backups preserve the history. Selecting layers and navigating do not create new change records. This is a local edit history, not a tamper-proof audit log.
 
 ## ATT&CK catalog and attribution
 
 The bundled catalog is in `data.js`. MITRE's ATT&CK content retains its [license and attribution](LICENSE-ATTACK.txt). ATT&CK is a registered trademark of The MITRE Corporation. This package does not choose or change a license for the application source.
 
 The ATT&CK catalog is bundled in `data.js`; no download or generation step is needed to run the app.
+
+### Editing mappings and importing older layers
+
+Open **Edit TTPs** from a layer in the Layer library. Use **Edit mappings** beside a technique to edit its scenario name, notes / description, recorded defense and review date in the same editor. Use **Add another mapping for this TTP** to record another scenario with a different outcome. Each mapping keeps its own notes, coverage review and work history. Check multiple techniques for a bulk change; choose whether to update all their existing mappings or add another mapping for each.
+
+Multiple mappings in one detection tool layer still count as **one detection layer** for that technique. Open opportunities stay visible even when another scenario of the same TTP is resolved. JSON exports preserve every mapping separately.
+
+Older TacLens JSON layers and workspace backups using Deficiencies (including the legacy `hunt` layer type) are migrated to **Opportunities** on import or when opened. Existing notes, dates, assessments and tracked work are kept. New exports use the `opportunity` layer type.
+
+### Accepting opportunity risks
+
+Use **Accept risk** beside an open opportunity in Analysis or the work tracker. Add optional acceptance notes and a date, then close the opportunity. You can also choose **Accept risk** under **Opportunity outcome** in the mapping editor. The mapping stays slate blue as **Risk accepted**, outside the open-work queue and separate from resolved coverage. It does not add detections or compensating controls, and other scenarios or intelligence reviews remain active.
+
+Review these decisions under **Analysis → Filter work or view history → Risk accepted**. To reconsider one, use **Reassess coverage**, or return its outcome to **Assess recorded defenses** in the layer editor. Acceptance dates and notes are preserved in workspace folders, JSON backups and HTML reports.
+
+Detection layers support multiple mappings of the same TTP. Use **Add another detection for this TTP**; each detection mapping has its own name, rules, notes and review date, while the tool layer still counts once in coverage statistics.
+
+### Logging on opportunity mappings
+
+Each opportunity mapping records **Logging present**, **No logging**, or **Not reviewed**. Edit this in the layer mapping editor or the Record defense dialog. Use **Apply logging only** in the bulk editor to update selected mapped TTPs while preserving defenses, accepted risks, notes and dates. **No change** preserves existing logging assessments. Older layers default to Not reviewed.
+
+The ATT&CK matrix shows a logging badge on each assessed technique, even with evidence counts turned off: **green** for Logging present, **red** for No logging, and **purple** for Not reviewed. Collapsed branches show child logging, and neutral **Logs mixed** means the selected layers or scenarios have different assessments. Hover or open a technique to inspect the individual mappings. Analyst and executive reports retain these indicators. Logging stays separate from defense coverage: it does not resolve opportunities, add detections, or change accepted-risk decisions.
