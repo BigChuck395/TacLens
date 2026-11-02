@@ -1,5 +1,9 @@
 # TacLens
 
+**Experimental D3FEND branch — work in progress.** This branch contains the current MITRE D3FEND integration for evaluation. The interface and mapping workflow are still being explored, and this work may change or be discontinued. The [main branch](https://github.com/BigChuck395/TacLens/tree/main) and [live app](https://bigchuck395.github.io/TacLens/) remain the released version.
+
+To try this experiment, [download this branch](https://github.com/BigChuck395/TacLens/archive/refs/heads/codex/d3fend-experimental.zip), fully extract it, and open `index.html`. **Node.js is not required.** Import `examples/operations-showcase-workspace.json` into an empty workspace to explore the synthetic D3FEND examples. See [BROWSER-ONLY.md](BROWSER-ONLY.md) for the required files and browser instructions.
+
 An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detection tools, opportunities and intelligence using categorical coverage assessments, then export detailed analyst reports or a concise executive matrix.
 
 **Live app:** [Launch TacLens](https://bigchuck395.github.io/TacLens/) — no installation required. Workspaces stay in your browser or folders you approve.
@@ -18,6 +22,22 @@ This distribution contains application code and generated testing data. It inclu
 6. **Save and share.** In Chrome or Edge, [choose a workspace folder](#save-workspaces-to-folders) for automatic disk saves. You can also export a JSON backup. Use **Export HTML report** for a detailed analyst report or a concise ELT report.
 
 Select or deselect layers in the library to change the evidence included in comparisons and reports. JSON backups preserve editable workspace data; HTML reports are read-only snapshots.
+
+### Explore D3FEND defenses
+
+Open **D3FEND** to start with the ATT&CK techniques already mapped in your selected layers. Nothing opens automatically. Choose **View defenses** on a technique to see **Documented in your layers** beside **Other options to explore**. Search by ATT&CK name or ID when you want to find a particular behavior, including one not yet mapped. Large libraries are split into pages of 12 techniques.
+
+Expand a defensive-method card to read what it does, see **Why it relates**, and inspect the exact layer mappings that link it. The ATT&CK behavior and D3FEND response appear together. Parent-level reference relationships are labeled explicitly. **Your source mappings** lists the existing assessments for the chosen ATT&CK technique. **Edit mapping** opens the existing editor for that exact scenario. Documented defenses do not repeat in the additional-options list.
+
+Use **Record defense** on a card to carry that defensive method into the assessment form. Choose the exact layer and scenario, record the defense assessment, and save. Different scenarios for the same ATT&CK technique retain independent selections. You can also add or remove optional D3FEND techniques in the layer mapping editor, including detection mappings.
+
+In the **ATT&CK matrix**, select a technique and expand **D3FEND defensive options** inside its inspection window. The same cards, explanations, source mappings and actions are available there without changing tabs. Hover summaries still include documented and related defense names.
+
+**Reference catalog** opens the complete seven-tactic D3FEND matrix. Browse or search the taxonomy, inspect definitions and reverse ATT&CK relationships, then use **Back to ATT&CK relationships** to return to your working context. Blue tiles show documentation in selected layers; neutral reference tiles do not represent assessed gaps.
+
+Documenting a D3FEND technique does not establish implementation, effectiveness, or coverage. Existing detection, control, risk and relevance assessments continue to determine matrix colors and analysis. The relationships are MITRE's inferred artifact connections; parent-level relationships are labeled explicitly rather than presented as direct sub-technique mappings. Missing relationships mean no link is bundled, not that no defense exists. The full catalog remains available for analyst-selected documentation.
+
+TacLens bundles a reduced [MITRE D3FEND 1.6.0 reference](https://d3fend.mitre.org/resources/ontology/) with 271 defensive techniques. The reference, search and saved selections work offline; external reference links open only when clicked. **Settings → D3FEND reference** shows the bundled version and attribution. Workspace JSON and folder storage retain selections. Analyst and executive HTML reports embed only documented defensive-technique references, with attribution. Keep `d3fend-data.js`, `d3fend.js`, and [LICENSE-D3FEND.txt](LICENSE-D3FEND.txt) with distributed copies. No additional server, database, account or API key is needed.
 
 ### Customize assessment terminology
 
@@ -108,7 +128,7 @@ No Node.js is needed to import the included example layers:
 3. Review the preview and confirm the import. Layer imports create new layer identities, so review coverage decisions in their new scope.
 4. Open Landscape, Matrix, Analysis, Coverage review and In progress to explore the examples.
 
-Use an empty workspace when importing the example so duplicate tool layers do not inflate counts. The example has 32 synthetic layers, over 1,000 mappings, nested folders, tags, fictional users and work history. It demonstrates multiple detection tools, resolved and open opportunities, independent intelligence coverage reviews, architectural protection and scheduled source reviews. See [examples/README.md](examples/README.md) for useful technique IDs.
+Use an empty workspace when importing the example so duplicate tool layers do not inflate counts. The example has 28 synthetic layers and 434 mappings, with nested folders, tags, role-based assignees and work history. It documents 81 D3FEND techniques across all seven defensive tactics and demonstrates duplicate scenarios, positive tool coverage, open and resolved findings, risk acceptance, dismissal, unrelated intelligence, scheduled reviews and archived sources. See [examples/README.md](examples/README.md) for useful technique IDs.
 
 Import the example manually when you want to try it. Normal startup never seeds testing data, and there is no demo reset button.
 

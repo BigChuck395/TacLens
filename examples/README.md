@@ -1,29 +1,27 @@
 # Synthetic testing workspace
 
-Import `operations-showcase-workspace.json` through **Settings → Workspaces & backups → Import layers / backups**. Import into an empty workspace. Every layer, mapping note, rule reference, tag, user and work item in this file is synthetic and illustrative.
+Import `operations-showcase-workspace.json` through **Settings → Workspaces & backups → Import layers / backups**. Import into an empty workspace. All layers, notes, rule IDs, users, decisions and work items are synthetic.
 
-The file is generated independently of saved user workspaces. Names of tools, teams, controls and people do not identify real deployments or individuals.
+Generated on November 2, 2026, this example contains 28 layers, 434 mapping records and 270 mapped ATT&CK techniques in its default selection. It documents 81 D3FEND techniques across Model, Harden, Detect, Isolate, Deceive, Evict and Restore. One detection layer is hidden and one intelligence layer is archived, so selecting or restoring those layers changes the totals.
 
-| Technique | Example behavior in the tool |
+| Technique | What to explore |
 | --- | --- |
-| T1685.005 | Same TTP mapped twice in one Opportunities layer: wevtutil has both defenses; the PowerShell scenario stays open and has its own work item. Detection and intelligence layers also demonstrate separate scenarios. Logging is present for wevtutil and absent for the PowerShell scenario, producing a mixed logging badge. |
-| T1546.017 | An accepted lab risk closes the opportunity in slate blue, with a dated acceptance note and no implied detection or control. |
-| T1059.001 | Detection and control present across several tools; no open opportunity. |
-| T1059.003 | Overlapping intelligence with no confirmed defense. |
-| T1003.001 | Reviewed detection-only protection and accepted coverage. |
-| T1567.002 | Architectural protection without a detection tool mapping. |
-| T1078 | Detection present; intelligence coverage review pending. |
-| T1082 | Defense recorded, but a scheduled intelligence source review is overdue. |
-| T1486 | Multiple open opportunities with only one source in progress. |
-| T1105 | Different intelligence sources with covered, pending and uncovered decisions. |
-| T1041 | All actionable sources tracked in progress; deprioritized in Needs work. |
-| T1021.001 | Defense recorded and tracked work ready to close. |
-| T1547.001 | Work returned to the queue with notes preserved. |
-| T1005 | An assignment to a fictional deleted user. |
-| T1110.003 | An upcoming scheduled intelligence source review. |
-| T1027 | Closed opportunity and intelligence work history. |
-| T1059.004 | A previous coverage decision becomes pending after detection evidence changes. |
+| T1059.001 — PowerShell | Two findings in one assessment layer: a managed-workstation test has both defenses; an unmanaged-endpoint scenario stays open with no logging and tracked work. Two SIEM rules still count as one tool layer. Three detection tool layers map this technique. One intelligence scenario awaits review while another has confirmed coverage. |
+| T1003.001 — LSASS Memory | Multiple positive tool mappings coexist with a reviewed intel scenario outside their managed-host scope. That source remains without coverage. Process-analysis and isolation techniques are documented separately. |
+| T1110.003 — Password Spraying | Identity analytics and account-locking controls were assessed together. The intelligence mapping has an explicit covered detection review. |
+| T1078.004 — Cloud Accounts | A training-tenant intelligence risk is accepted without recording a defense. Access modeling and credential-revocation references do not turn it green. |
+| T1685.005 — Clear Windows Event Logs | An open finding has no logging or confirmed defense. File-integrity monitoring and configuration recovery are analyst-selected options for this newer ATT&CK ID, not inferred coverage. |
+| T1059.002 — AppleScript | Intelligence is marked Not related because its operating-system population is outside this synthetic scope. It remains visible as attack context. |
+| T1053.005 — Scheduled Task | A duplicate intelligence source is dismissed. Its saved reference does not imply coverage. |
+| T1486 — Data Encrypted for Impact | A bounded replay validates detection and recovery for a managed file service. Restore File and Restore Disk Image document the recovery methods. |
+| T1490 — Inhibit System Recovery | An older, open management-plane finding has no confirmed defense and an active engineering work item. Modeling and recovery references describe the investigation. |
+| T1005 — Data from Local System | A decoy-file access alert demonstrates Deceive techniques without claiming a prevention control. |
+| T1046 — Network Service Discovery | Network-node inventory, logical-link mapping and access modeling document test scope. The finding stays open because modeling alone does not establish protection. |
 
-The layer library demonstrates folders, subfolders, filtering, active/deleted tags and an archived intelligence layer. Choose **Archived layers** in the library to find it and try **Restore layer**. Reports export selected active layers only. In-progress work is shown for active layers, including unselected ones; archived work stays preserved and returns when its layer is restored.
+In **D3FEND matrix**, select **Documented in selected layers** to see the defensive techniques used by these scenarios. Blue means documented, not automatically implemented or effective. Select a tile to inspect exact source mappings, then switch the layer selection to see the highlights update.
 
-The example is included as a ready-to-import JSON file. Normal startup starts empty and never installs or replaces saved workspace data.
+The library includes nested folders, a deleted tag that needs attention in Settings, an unselected lab detection layer and an archived legacy intelligence source. The intelligence review page includes both overdue and upcoming schedules; other sources remain indefinite. **In progress** includes active, queued and closed work, with role-based assignments and notes. **Recent changes** contains illustrative documentation and archive events.
+
+Restore the archived source from the library's **Archived layers** filter. Its mappings and old review schedule are retained. Reports include selected active layers only and preserve documented D3FEND references.
+
+This file is generated independently of saved user workspaces. Normal startup never installs or replaces mock data, and there is no demo reset button.

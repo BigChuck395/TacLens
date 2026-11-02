@@ -14,7 +14,7 @@ Keep the app files together. Moving only `index.html` breaks its relative CSS an
 
 ## Files you need
 
-These 13 files are required for the application, kept together in one folder:
+These 15 files are required for the application, kept together in one folder:
 
 | File | Purpose |
 | --- | --- |
@@ -23,6 +23,8 @@ These 13 files are required for the application, kept together in one folder:
 | `data.js` | Bundled ATT&CK catalog, including its attribution. |
 | `history.js` | Recent layer and mapping edit history. |
 | `terminology.js` | Workspace terminology used by app labels and reports. |
+| `d3fend-data.js` | Bundled D3FEND defensive-technique reference and inferred ATT&CK relationships. |
+| `d3fend.js` | Defensive options, mapping selections and offline report references. |
 | `core.js` | Mapping, coverage and workspace logic. |
 | `work-ui.js` | Work tracking and coverage review interfaces. |
 | `work-report.js` | Work tracker in exported reports. |
@@ -32,7 +34,7 @@ These 13 files are required for the application, kept together in one folder:
 | `storage.js` | Direct folder saves, browser recovery storage and the optional local-server connection. |
 | `app.js` | Main application and analyst report generation. |
 
-Also keep `favicon.ico` for the browser-tab icon, and include `LICENSE-ATTACK.txt` when distributing the bundled ATT&CK data. The testing workspace is optional.
+Also keep `favicon.ico` for the browser-tab icon, and include `LICENSE-ATTACK.txt` and `LICENSE-D3FEND.txt` when distributing the bundled reference data. The testing workspace is optional.
 
 ```text
 TacLens/
@@ -40,6 +42,8 @@ TacLens/
   styles.css
   data.js
   terminology.js
+  d3fend-data.js
+  d3fend.js
   core.js
   history.js
   work-ui.js
@@ -51,6 +55,7 @@ TacLens/
   app.js
   favicon.ico
   LICENSE-ATTACK.txt
+  LICENSE-D3FEND.txt
   examples/
     operations-showcase-workspace.json   (optional testing data)
 ```
