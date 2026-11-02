@@ -31,7 +31,7 @@ In **Analysis**, use **Review decision** on a finding or intelligence mapping to
 
 Intelligence mappings also support **Not related to our environment**. The technique remains visible as attack context with a neutral matrix result, separate from confirmed coverage. Set this in the layer mapping editor, through **Record defense → Intelligence applicability**, or through **Review decision**. The bulk layer editor can apply review outcomes to selected techniques.
 
-Hover over or focus **Mapped techniques** on Landscape or the ATT&CK matrix for parent/sub-technique counts, mapping counts, and a breakdown by result. Use the matrix's **Result / color** filter to focus on particular outcomes. **Settings → Matrix colors** changes the palette for the current workspace and its exported HTML reports. Workspace JSON backups and folder storage retain the palette. When importing a workspace, choose whether to adopt its colors. **Coverage not confirmed** means intelligence has no confirmed applicable defense; it remains separate from open findings, pending reviews, and accepted risk.
+Hover over or focus **Mapped techniques** on Landscape or the ATT&CK matrix for parent/sub-technique counts, mapping counts, and a breakdown by result. Use the matrix's **Result / color** filter to focus on particular outcomes. **Settings → Matrix colors** changes the palette for the current workspace and its exported HTML reports. Workspace JSON backups and folder storage retain the palette. When importing a workspace, choose whether to adopt its colors. **Intel without coverage** means intelligence has no confirmed applicable defense; it remains separate from open findings, pending reviews, and accepted risk.
 
 ### Archive layers
 

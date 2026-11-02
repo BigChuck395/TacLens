@@ -48,7 +48,7 @@
     @media print{.summary-stat-tooltip{display:none!important}.stats{z-index:auto}}
   `;
   if(root.document&&!root.document.getElementById('matrix-styles')){const el=root.document.createElement('style');el.id='matrix-styles';el.textContent=css+statisticsCSS;root.document.head.append(el);}
-  function resultChoices(){return [['attention',TacLensTerms.text('Open opportunity')],['exposed','Coverage not confirmed'],['intel-pending','Intel detection coverage not reviewed'],['risk-accepted','Risk accepted'],['covered','Defense recorded'],['dismissed','Dismissed'],['not-related','Intel not related'],['unreviewed','Not reviewed'],['unmapped','No mapping']];}
+  function resultChoices(){return [['attention',TacLensTerms.text('Open opportunity')],['exposed','Intel without coverage'],['intel-pending','Intel detection coverage not reviewed'],['risk-accepted','Risk accepted'],['covered','Defense recorded'],['dismissed','Dismissed'],['not-related','Intel not related'],['unreviewed','Not reviewed'],['unmapped','No mapping']];}
   const defaultColors={attention:'#c75263',exposed:'#c68825','intel-pending':'#9678b9','risk-accepted':'#617ca8',covered:'#53a17c',dismissed:'#778899','not-related':'#6e8c98',unreviewed:'#6b97cb',unmapped:'#a6b0bd'};
   function normalizeColors(value){return Object.fromEntries(Object.entries(defaultColors).map(([key,fallback])=>[key,typeof value?.[key]==='string'&&/^#[0-9a-f]{6}$/i.test(value[key])?value[key].toLowerCase():fallback]));}
   function paletteCSS(value){
@@ -68,7 +68,7 @@
       mapped:{title:'Mapped technique breakdown',rows:[...split(mapped),['Selected layers',layers.filter(Strata.isLayerActive).length],['Mapping records',mapped.reduce((n,x)=>n+x.s.entries.length,0)],...states],note:'Each technique has one result color. Mapping records count individual scenarios.'},
       detection:{title:'Detection coverage breakdown',rows:[...split(detected),['Detection tool layers',new Set(toolEntries.map(e=>e.layerId)).size],['Tool mapping records',toolEntries.length],['Named rules / IDs',new Set(toolEntries.flatMap(e=>(e.detections||[]).map(name=>JSON.stringify([e.layerId,name.toLowerCase()])))).size],['Detection recorded in assessments',detected.filter(x=>hasAssessment(x.s)).length],['Assessment-only techniques',detected.filter(x=>!x.s.detectionCount).length]],note:'Technique counts are unique. Tool mappings and assessment evidence can cover the same technique.'},
       control:{title:'Compensating control breakdown',rows:[...split(controlled),['Assessment layers',new Set(controls.map(e=>e.layerId)).size],['Control assessment records',controls.length],['Detection also recorded',controlled.filter(x=>x.s.detected).length],[TacLensTerms.text('Open opportunities'),controlled.filter(x=>x.s.huntGap).length],['Intel control assessments',controls.filter(e=>e.type==='intel').length]],note:'Counts reflect recorded compensating controls in the selected layers. Separate scenarios can still need work.'},
-      exposure:{title:'Coverage not confirmed breakdown',rows:[...split(exposed),['Intel source layers',new Set(concerns.map(a=>a.layerId)).size],['Intel mappings needing coverage',concerns.length],['Not reviewed',concerns.filter(a=>a.state==='unreviewed').length],['Reviewed, coverage not confirmed',concerns.filter(a=>a.state==='uncovered').length],['Techniques with detection tool mappings',exposed.filter(x=>x.s.detectionCount>0).length],[TacLensTerms.text('Open opportunities'),exposed.filter(x=>x.s.huntGap).length]],note:'Coverage is assessed per intel mapping. A mapped detection tool alone does not confirm it covers the reported behavior.'}
+      exposure:{title:'Intel without coverage breakdown',rows:[...split(exposed),['Intel source layers',new Set(concerns.map(a=>a.layerId)).size],['Intel mappings needing coverage',concerns.length],['Not reviewed',concerns.filter(a=>a.state==='unreviewed').length],['Reviewed, no coverage',concerns.filter(a=>a.state==='uncovered').length],['Techniques with detection tool mappings',exposed.filter(x=>x.s.detectionCount>0).length],[TacLensTerms.text('Open opportunities'),exposed.filter(x=>x.s.huntGap).length]],note:'Coverage is assessed per intel mapping. A mapped detection tool alone does not confirm it covers the reported behavior.'}
     };
   }
   function mappedStatistics(data,layers){return summaryStatistics(data,layers).mapped.rows;}
@@ -78,7 +78,7 @@
   }
   function coverageState(s){
     if(s.huntGap)return {key:'attention',label:TacLensTerms.text('Open opportunity')};
-    if(s.exposed)return {key:'exposed',label:'Coverage not confirmed'};
+    if(s.exposed)return {key:'exposed',label:'Intel without coverage'};
     if(s.intelPending)return {key:'intel-pending',label:'Intel detection coverage not reviewed'};
     if(s.riskAccepted)return {key:'risk-accepted',label:'Risk accepted'};
     if(s.detected||s.controlled)return {key:'covered',label:'Defense recorded'};
