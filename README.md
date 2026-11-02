@@ -25,6 +25,14 @@ Open **Settings → Terminology** to replace the default **Finding / Findings** 
 
 Each workspace keeps its own labels. Custom layer names, folders, notes, mapping identities and coverage decisions stay as entered. Workspace folders and JSON backups retain the setting. When importing a workspace or layer file that includes terminology, the import preview lets you choose whether to adopt those labels; older files continue to work with the current workspace's terminology.
 
+### Review decisions and matrix colors
+
+In **Analysis**, use **Review decision** on a finding or intelligence mapping to **Dismiss**, **Accept risk**, or **Reopen / reassess** it. Decisions can include a date and notes. Closed items leave **Needs work** and remain available under **Filter work or view history**. Each decision affects only that mapping; it does not create detection or compensating-control coverage. Active tracked work for that mapping closes with the decision.
+
+Intelligence mappings also support **Not related to our environment**. The technique remains visible as attack context with a neutral matrix result, separate from confirmed coverage. Set this in the layer mapping editor, through **Record defense → Intelligence applicability**, or through **Review decision**. The bulk layer editor can apply review outcomes to selected techniques.
+
+Hover over or focus **Mapped techniques** on Landscape or the ATT&CK matrix for parent/sub-technique counts, mapping counts, and a breakdown by result. Use the matrix's **Result / color** filter to focus on particular outcomes. **Settings → Matrix colors** changes the palette for the current workspace and its exported HTML reports. Workspace JSON backups and folder storage retain the palette. When importing a workspace, choose whether to adopt its colors. **Coverage not confirmed** means intelligence has no confirmed applicable defense; it remains separate from open findings, pending reviews, and accepted risk.
+
 ### Archive layers
 
 Use **Archive** on a layer in the Layer library, or **Archive layer** in its settings. For intelligence, you can also archive directly from **Coverage review → Intelligence reviews** or the review dialog. Archiving keeps the complete layer, including mappings, notes, folders, tags, tracked work and its review schedule. It removes the layer from coverage totals, analysis, work queues, scheduled intelligence reviews and HTML reports.

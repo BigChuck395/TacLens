@@ -27,6 +27,7 @@
     const result={technique:{label:'Technique',value:entry.techniqueID},name:{label:'Mapping name',value:entry.name||''},status:{label:'Outcome',value:core.types[layer.type]?.statuses[entry.status]||entry.status},notes:{label:'Notes',value:entry.notes||''},date:{label:'Reviewed / mapped on',value:entry.date||''}};
     if(layer.type==='detection')result.detections={label:'Detection names / rule IDs',value:(entry.detections||[]).join('\n')};
     else result.defense={label:'Defense recorded',value:core.defenseChoices.find(([key])=>key===core.defenseForType(layer.type,entry.compensatingControl))?.[1]||'Not reviewed'};
+    if(layer.type!=='detection'){result.decisionDate={label:'Analysis decision on',value:entry.analysisDecision?.date||''};result.decisionNotes={label:'Analysis decision notes',value:entry.analysisDecision?.notes||''};result.riskDate={label:'Risk accepted on',value:entry.riskAcceptance?.date||''};result.riskNotes={label:'Risk acceptance notes',value:entry.riskAcceptance?.notes||''};}
     if(layer.type==='opportunity'){
       result.logging={label:'Logging',value:core.loggingChoices.find(([key])=>key===core.loggingValue(entry.logging))[1]};
       result.acceptedOn={label:'Risk accepted on',value:entry.riskAcceptance?.date||''};result.acceptanceNotes={label:'Risk acceptance notes',value:entry.riskAcceptance?.notes||''};
@@ -46,7 +47,7 @@
     const events=[];let omitted=0;
     const emit=(kind,layer,entry,fields,title)=>{if(!fields.length)return;if(events.length>=LIMIT-1){omitted++;return;}events.push({id:root.crypto.randomUUID(),timestamp:iso(timestamp),kind,title:title||kinds[kind],layerId:layer?.id||'',layerName:layer?.name||'',layerType:layer?.type||'',mappingId:entry?.id||'',mappingName:entry?.name||'',techniqueID:entry?.techniqueID||'',fields});};
     if(!before){emit('workspace-added',null,null,[field('name','Workspace name','',after.name),field('layers','Layers','',String(after.layers?.length||0))].filter(Boolean));return events;}
-    const workspaceFields=w=>({name:{label:'Workspace name',value:w.name},folders:{label:'Folder organization',value:(w.folders||[]).join('\n')},tags:{label:'Tag library',value:(w.tags||[]).join('\n')},users:{label:'User library',value:(w.users||[]).join('\n')},termSingular:{label:'Singular assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.singular},termPlural:{label:'Plural assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.plural}});
+    const workspaceFields=w=>({name:{label:'Workspace name',value:w.name},folders:{label:'Folder organization',value:(w.folders||[]).join('\n')},tags:{label:'Tag library',value:(w.tags||[]).join('\n')},users:{label:'User library',value:(w.users||[]).join('\n')},matrixColors:{label:'Matrix colors',value:JSON.stringify(w.matrixColors||{})},termSingular:{label:'Singular assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.singular},termPlural:{label:'Plural assessment label',value:TacLensTerms.normalize(w.terminology).opportunity.plural}});
     emit('workspace-updated',null,null,compare(workspaceFields(before),workspaceFields(after)));
     const oldLayers=new Map((before.layers||[]).map(l=>[l.id,l])),newLayers=new Map((after.layers||[]).map(l=>[l.id,l]));
     for(const layer of after.layers||[]){
