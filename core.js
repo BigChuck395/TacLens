@@ -204,7 +204,8 @@
   function normalizeWork(value){
     if(!value||!['in_progress','closed','queued'].includes(value.status)||!validDay(value.createdOn)||!validDay(value.updatedOn)||value.status==='closed'&&!validDay(value.closedOn)||typeof value.assignee!=='string'||value.assignee.length>120||!Array.isArray(value.notes)||value.notes.length>500)throw Error('Invalid work item.');
     const notes=value.notes.map(n=>{if(!n||!validDay(n.date)||typeof n.text!=='string'||!n.text.trim()||n.text.length>4000)throw Error('Invalid work note.');return {date:n.date,text:n.text.trim(),kind:['note','started','assigned','closed','queued','migration'].includes(n.kind)?n.kind:'note'};});
-    return {status:value.status,assignee:value.assignee.trim(),createdOn:value.createdOn,updatedOn:value.updatedOn,...(value.status==='closed'?{closedOn:value.closedOn}:{}),notes};
+    const targets=normalizeD3fend(value.d3fendTargets);
+    return {status:value.status,assignee:value.assignee.trim(),createdOn:value.createdOn,updatedOn:value.updatedOn,...(value.status==='closed'?{closedOn:value.closedOn}:{}),...(targets.length?{d3fendTargets:targets}:{}),notes};
   }
   function workInfo(entry,date){
     if(entry.work)return entry.work;
@@ -237,13 +238,16 @@
   }
   function updateWork(workspace,id,layerId,patch,date,data){
     if(!data.techniques.some(t=>t.id===id)||!validDay(date))throw Error('Choose a valid technique and date.');
-    if(!['start','assign','add_note','close','queue'].includes(patch.action))throw Error('Choose a work action.');
+    if(!['start','plan','unplan','assign','add_note','close','queue'].includes(patch.action))throw Error('Choose a work action.');
     const result=structuredClone(workspace);result.users=normalizeUsers(result.users);
     const layer=result.layers.find(l=>l.id===layerId&&!l.archived&&['opportunity','intel'].includes(l.type)),entry=findMapping(layer,id,patch.mappingId);if(!entry)throw Error('The source mapping is no longer available.');
-    const previous=workInfo(entry,date);if(!previous&&patch.action!=='start')throw Error('Start tracking this mapping first.');
-    const work=previous?normalizeWork(previous):{status:'in_progress',assignee:'',createdOn:date,updatedOn:date,notes:[]};
+    const previous=workInfo(entry,date);if(!previous&&!['start','plan'].includes(patch.action))throw Error('Start tracking this mapping first.');
+    const work=previous?normalizeWork(previous):{status:patch.action==='plan'?'queued':'in_progress',assignee:'',createdOn:date,updatedOn:date,notes:[]};
     const append=(text,kind)=>{if(work.notes.length>=500)throw Error('This work item has reached its 500-note limit.');work.notes.push({date,text,kind});};
     const note=String(patch.note||'').trim();if(note.length>4000)throw Error('Work notes support up to 4,000 characters.');
+    if(patch.d3fendTargets!==undefined){const targets=normalizeD3fend([...new Set([...(work.d3fendTargets||[]),...normalizeD3fend(patch.d3fendTargets)])]);if(targets.length)work.d3fendTargets=targets;}
+    if(patch.action==='plan'&&(!previous||previous.status==='closed')){work.status='queued';delete work.closedOn;append(previous?'Planned follow-up work.':'Planned work.','queued');}
+    if(patch.action==='unplan'){const target=normalizeD3fend([patch.d3fendTarget])[0];if(!work.d3fendTargets?.includes(target))throw Error('This defensive method is not in the work plan.');work.d3fendTargets=work.d3fendTargets.filter(id=>id!==target);if(!work.d3fendTargets.length)delete work.d3fendTargets;append('Removed planned D3FEND test: '+target+'.','note');}
     if(patch.action==='start'){if(!previous||previous.status!=='in_progress')append(previous?.status==='closed'?'Reopened work.':'Started work.','started');work.status='in_progress';delete work.closedOn;}
     if(patch.assignee!==undefined){const name=String(patch.assignee||'').trim();if(name&&!result.users.includes(name)&&name!==work.assignee)throw Error('Choose an existing user or create one.');if(name!==work.assignee){work.assignee=name;append(name?'Assigned to '+name+'.':'Assignment cleared.','assigned');}}
     if(patch.action==='add_note'&&!note)throw Error('Enter a work note.');

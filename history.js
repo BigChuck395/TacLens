@@ -37,8 +37,9 @@
       result.intelReview={label:'Detection coverage review',value:entry.intelDetectionReview?({covered:'Covered by detections',uncovered:'Not covered by detections',pending:'Awaiting review'}[entry.intelDetectionReview.decision]||''):'Not reviewed'};
       result.intelReviewDate={label:'Detection coverage reviewed on',value:entry.intelDetectionReview?.date||''};
     }
-    const w=entry.work;result.workStatus={label:'Work status',value:w?({in_progress:'In progress',closed:'Closed',queued:'Returned to queue'}[w.status]||w.status):''};
+    const w=entry.work;result.workStatus={label:'Work status',value:w?({in_progress:'In progress',closed:'Closed',queued:'Queued'}[w.status]||w.status):''};
     result.workAssignee={label:'Assigned to',value:w?.assignee||''};result.workClosed={label:'Work closed on',value:w?.closedOn||''};
+    result.workDefenses={label:'Planned D3FEND tests',value:(w?.d3fendTargets||[]).join(', ')};
     result.workNotes={label:'Work notes',value:(w?.notes||[]).map(n=>n.date+' · '+n.text).join('\n')};
     return result;
   }

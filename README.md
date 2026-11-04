@@ -29,6 +29,12 @@ Open **D3FEND** to start with the ATT&CK techniques already mapped in your selec
 
 Expand a defensive-method card to read what it does, see **Why it relates**, and inspect the exact layer mappings that link it. The ATT&CK behavior and D3FEND response appear together. Parent-level reference relationships are labeled explicitly. **Your source mappings** lists the existing assessments for the chosen ATT&CK technique. **Edit mapping** opens the existing editor for that exact scenario. Documented defenses do not repeat in the additional-options list.
 
+The cards show actual detection-tool layers separately from finding and intelligence assessments. An open finding or intelligence mapping awaiting review stays visible alongside positive evidence from other scopes. Expanding a method shows its detection names or rule IDs, source notes, and assessments.
+
+**Test and review plans** highlights the specific finding or intelligence scenarios that need investigation. Choose **Plan a test** on a scenario or defensive-method card, select the source scenario and D3FEND method, and optionally add an assignee and test steps. Plans start **Queued** unless you choose **Start work now**; adding a plan to existing in-progress work retains that work. Queued plans keep Needs work active. In-progress work follows the existing deprioritization rules.
+
+Test targets are stored in the existing work item and stay separate from the mapping's documented D3FEND methods and coverage. **View work** opens that exact scenario; clicking a test target returns to the defensive method. You can remove a test target while retaining the source mapping and work history. After testing, use **Record defense** to update the assessment and close the work through the normal workflow. Analyst and executive reports include test targets when Work tracker is selected.
+
 Use **Record defense** on a card to carry that defensive method into the assessment form. Choose the exact layer and scenario, record the defense assessment, and save. Different scenarios for the same ATT&CK technique retain independent selections. You can also add or remove optional D3FEND techniques in the layer mapping editor, including detection mappings.
 
 In the **ATT&CK matrix**, select a technique and expand **D3FEND defensive options** inside its inspection window. The same cards, explanations, source mappings and actions are available there without changing tabs. Hover summaries still include documented and related defense names.
