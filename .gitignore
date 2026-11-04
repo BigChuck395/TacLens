@@ -8,6 +8,10 @@ node_modules/
 /_site/
 .env
 .env.*
+*.pem
+*.key
+.api-keys.json
+.api-keys.json.tmp-*
 *.log
 *.zip
 *.sha256
@@ -15,6 +19,7 @@ node_modules/
 # Reports and workspace exports should not be committed accidentally.
 *.html
 !index.html
+!api.html
 *.json
 !package.json
 !package-lock.json

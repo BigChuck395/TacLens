@@ -1,5 +1,9 @@
 # TacLens
 
+**API integrations branch — testing and development.** This branch adds the authenticated integration API and API console. The [main branch](https://github.com/BigChuck395/TacLens/tree/main) and [live app](https://bigchuck395.github.io/TacLens/) remain the released version.
+
+To try it, [download this branch](https://github.com/BigChuck395/TacLens/archive/refs/heads/codex/integration-api.zip), fully extract it, and follow [API.md](API.md). The API requires the optional Node.js 24+ server. Browser-only use still runs without Node.js; GitHub Pages does not host the API.
+
 An ATT&CK workspace for SOC, intelligence, red and purple teams. Compare detection tools, opportunities and intelligence using categorical coverage assessments, then export detailed analyst reports or a concise executive matrix.
 
 **Live app:** [Launch TacLens](https://bigchuck395.github.io/TacLens/) — no installation required. Workspaces stay in your browser or folders you approve.
@@ -95,9 +99,17 @@ node server.cjs
 
 Open **http://127.0.0.1:5173/**. No dependency installation, account, API key or build step is required. The server listens on the local loopback interface. In this optional mode, workspaces save under `workspaces/`, which is ignored by Git. The first launch starts empty.
 
-Keep `server.cjs` and `workspace-store.cjs` beside the browser application files listed in [BROWSER-ONLY.md](BROWSER-ONLY.md). You can also start the server with `npm start`.
+Keep `server.cjs`, `workspace-store.cjs`, `api.cjs`, `api-auth.cjs`, and `api-schema.cjs` beside the browser application files listed in [BROWSER-ONLY.md](BROWSER-ONLY.md). You can also start the server with `npm start`.
 
 Settings provides theme selection, tag management, workspace exports and cleanup. Manage workspaces can create, rename, delete or open saved workspaces. With the local server, each workspace can use its own folder, including a mapped network drive or UNC path. Keep one active writer per shared workspace; directory locking and stale-save checks help prevent overwrites.
+
+## API and integrations
+
+The optional server now provides a versioned API at `/api/v1` for workspaces, layers, individual and bulk mappings, defense/risk decisions, intelligence reviews, coverage statistics, prioritized analysis, work tracking, recent changes, tags, users, folders, JSON backups, and analyst/ELT HTML reports.
+
+Open **Settings → API & integrations → Open API console** to create named read-only or write keys, browse the generated OpenAPI 3.1 contract, and test requests. Workspace edits require an ETag so an integration cannot silently replace newer UI or API changes. API edits follow the same assessment rules and appear in Recent changes with the integration name.
+
+The listener stays local by default. Integrations from other computers can use configured HTTPS or a local TLS reverse proxy. Keys grant server-wide access; network listening is an explicit server configuration. See [API.md](API.md) for setup, endpoint details, examples and permission boundaries. Browser-only use still needs no Node.js, and GitHub Pages does not host the API.
 
 ## Import the testing workspace
 

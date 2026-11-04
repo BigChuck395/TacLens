@@ -14,7 +14,7 @@ Keep the app files together. Moving only `index.html` breaks its relative CSS an
 
 ## Files you need
 
-These 13 files are required for the application, kept together in one folder:
+These 14 files are required for the application, kept together in one folder:
 
 | File | Purpose |
 | --- | --- |
@@ -29,8 +29,9 @@ These 13 files are required for the application, kept together in one folder:
 | `insights.js` | Analysis views and evidence summaries. |
 | `matrix.js` | Interactive matrix and technique previews. |
 | `elt-report.js` | Executive report generation. |
+| `reports.js` | Shared Landscape markup and analyst report generation. |
 | `storage.js` | Direct folder saves, browser recovery storage and the optional local-server connection. |
-| `app.js` | Main application and analyst report generation. |
+| `app.js` | Main application. |
 
 Also keep `favicon.ico` for the browser-tab icon, and include `LICENSE-ATTACK.txt` when distributing the bundled ATT&CK data. The testing workspace is optional.
 
@@ -47,6 +48,7 @@ TacLens/
   insights.js
   matrix.js
   elt-report.js
+  reports.js
   storage.js
   app.js
   favicon.ico
@@ -55,7 +57,7 @@ TacLens/
     operations-showcase-workspace.json   (optional testing data)
 ```
 
-You do not need `server.cjs`, `workspace-store.cjs`, `package.json`, `.github/`, `node_modules/` or the original `enterprise-attack.json` download to run the browser-only app. The catalog is already in `data.js`.
+You do not need `server.cjs`, `workspace-store.cjs`, `api.cjs`, `api-auth.cjs`, `api-schema.cjs`, `package.json`, `.github/`, `node_modules/` or the original `enterprise-attack.json` download to run the browser-only app. The catalog is already in `data.js`. `api.html`, `api-console.js`, and `API.md` are optional API setup documentation; integrations require the Node.js server and do not run on GitHub Pages.
 
 ## Where your work is saved
 
@@ -72,7 +74,7 @@ Use **Open saved workspace folder** to reopen a folder containing `workspace.jso
 
 Folder connections and a recovery copy are remembered in browser storage. Clearing browser data removes those connections and browser-only workspaces, but leaves your selected folder files intact. Reopen saved folders to reconnect them. Keep JSON exports for portable backups. Removing a linked workspace from the app keeps its saved folder.
 
-Firefox does not currently support automatic writes to a selected folder through this browser API. For automatic folder storage in Firefox, keep `server.cjs` and `workspace-store.cjs` beside the browser application files, run `node server.cjs` and open **http://127.0.0.1:5173/**. No dependency installation is needed. Direct folder saves in Chrome and Edge and exported reports do not require this server.
+Firefox does not currently support automatic writes to a selected folder through this browser API. For automatic folder storage in Firefox, keep `server.cjs`, `workspace-store.cjs`, `api.cjs`, `api-auth.cjs`, and `api-schema.cjs` beside the browser application files, run `node server.cjs` and open **http://127.0.0.1:5173/**. No dependency installation is needed. Direct folder saves in Chrome and Edge and exported reports do not require this server.
 
 ## Static hosting and GitHub Pages
 
